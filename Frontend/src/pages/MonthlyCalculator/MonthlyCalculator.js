@@ -1,33 +1,29 @@
 import './MonthlyCalculator.css';
-import Container from "react-bootstrap/Container"
-import {Button,Stack}from "react-bootstrap"
-import 'bootstrap/dist/css/bootstrap.min.css';
+import {Button,Container,Stack}from "react-bootstrap"
+import { useState } from 'react';
+
 
 function MonthlyCalculator(){
+
+
     return (
-        <>
-        <section>
-            <div class="container-fluid">
-            <Stack direction='horizontal' gap={2}>
-                <Button className='upperButtons'> Manage Catogories</Button>
-                <Button className='upperButtons'>Graphs</Button>            
-                <Button className='upperButtons'>History</Button>     
-            </Stack>
-            <div className='mb-5'>
-                <h1 className="expenseTitle">Manage Your Expenses </h1>
-                <h2 className='infoExpense'> Add your Expenses according to catogories</h2> 
-            </div>
-
-            </div>
-        </section>
-   
-        
-        <br></br>
-            
-        
-
-        
-    </>
+        <div>
+               
+                <div className='me-auto'>
+                    <h1 className="expenseTitle">Manage Your Expenses </h1>
+                    
+                </div> 
+                    <Stack direction='horizontal'>
+                    <Button className='upperButtons' > Manage Catogories</Button>
+                    <Button className='upperButtons'>Graphs</Button>
+                    <Button className='upperButtons'>History</Button>   
+                    </Stack>
+                    
+                <div>
+                <h2 className='infoExpense'> Add your Expenses according to catogories</h2>
+                </div>
+                
+           </div>
     )
 }
     
