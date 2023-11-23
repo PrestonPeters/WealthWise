@@ -1,6 +1,12 @@
 import './MonthlyCalculator.css';
+<<<<<<< HEAD
 import {Button,Container,Stack}from "react-bootstrap"
 import { useState } from 'react';
+=======
+import {Button,Container,Stack} from "react-bootstrap";
+import { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+>>>>>>> 21440f0f0bb38d0837954e00cac51671314ef590
 
 
 function MonthlyCalculator(){
