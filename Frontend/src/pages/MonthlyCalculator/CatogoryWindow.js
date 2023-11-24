@@ -40,7 +40,7 @@ function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
                                 value={inputCatogoryName}
                                 required
                                 placeholder="i.e Grocery"
-                                onChange={(e)=>setCatogoryName(e.target.value)}
+                                onChange={(catogory)=>setCatogoryName(catogory.target.value)}
                                
                                 />
                         </Form.Group>
@@ -59,12 +59,7 @@ function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
                             Remove The Existing Catogory  
                             </Form.Label>
                         </Form.Group>
-                            <div className="d-grid gap-2 mb-3" >
-                                <Button variant="outline-primary"> Grocery</Button>
-                                <Button variant="outline-primary"> Rent</Button>
-                                <Button variant="outline-primary"> Vehicle</Button>
-                                <Button variant="outline-primary"> Medicine</Button>
-                            </div>
+                           
                         <Stack direction="horizontal" gap={2}>
                         <Button onClick={windowClose}>Remove</Button>
                         <Button onClick={windowClose}>Cancel</Button>
