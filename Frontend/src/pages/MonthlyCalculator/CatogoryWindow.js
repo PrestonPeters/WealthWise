@@ -1,95 +1,82 @@
+import { Button, Modal, ModalFooter, Tab, Tabs , Form, Stack} from "react-bootstrap";
 
-import { useEffect, useState } from "react";
-import './MonthlyCalculator.css';
+import { useState } from "react";
 
-
-function CatogoryWindow({isWindowOpen,windowClose }){
-  const [addButtonClicked, setAddButtonClicked] = useState(false);
-  const [removeButtonClicked, setRemoveButtonClicked] = useState(false);
-  const [isAdditionWindowOpen,setAdditionWindowOpen] = useState(false);
-  const [isDeletionWindowOpen,setDeletionWindowOpen] = useState(false);
-  useEffect(()=>{
-    if(isWindowOpen){
-      setAdditionWindowOpen(true);
-    setDeletionWindowOpen(false);
-    setAddButtonClicked(true);
-    setRemoveButtonClicked(false); 
-    }
-  },[isWindowOpen]);
-
-  const additionWindow = () =>{
-    setAdditionWindowOpen(true);
-    setDeletionWindowOpen(false);
-    setAddButtonClicked(true);
-    setRemoveButtonClicked(false); 
-  }
-
-  const deletionWindow = () =>{
-    setDeletionWindowOpen(true);
-    setAdditionWindowOpen(false);
-    setAddButtonClicked(false);
-    setRemoveButtonClicked(true);
-
-   
-  }
- 
+function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
+    const [inputCatogoryName, setCatogoryName] = useState('');
+    const [showAlert, setAlert] = useState(false);
 
 
-  const [catogoryName, setCatogoryName] = useState('');
-  const handleAddCategory=()=>{
-        if(catogoryName.trim===0){
-          alert('Catogory Name is required');
-          return;
+    const addThisCatogory=()=>{
+        if(inputCatogoryName.length===0){
+            setAlert(true);
+            return;
         }
+        addingNewcatogory(inputCatogoryName);
         setCatogoryName('');
+        windowClose();}
 
-  }
-  
-  
-  
-  
-
-
-
-    
     return(
-
-        <div className="catogoryWindow" style={{ display: isWindowOpen ? 'block' : 'none' }}>
-          <h3 style={{marginTop:"2%"}}>Add or Remove Catogories</h3>
-          <div className="tabs-block">
-            <button className={`tab ${addButtonClicked ? 'clicked' : ''}`} onClick={additionWindow}>Add</button>
-            <button className={`tab ${removeButtonClicked ? 'clicked' : ''}`} onClick={deletionWindow}>Remove</button>
-          </div>
-          <div className="tab-content">
-            <div className="additionWindow" style={{ display: isAdditionWindowOpen ? 'block' : 'none' }}>
-              <form>
-                <label style={{fontSize:'large'}}>
-                  Catogory Name: 
-                </label>
-                <br></br>
-                <input className="catogoryNameInputBox"
-                  type="text"
-                  value={catogoryName}
-                  onChange={(e) =>setCatogoryName(e.target.value)}
-                  required 
-                  placeholder="i.e XYZ supermarket"
-                  />
-                  <br></br>
-                  <button className="catogoryButton"   type="button" onClick={handleAddCategory}>Add Category</button>             
-                  <button className="catogoryButton"  onClick={windowClose}>Close</button>
-              </form>
-              
-          </div>
-          <div className="deletionWindow" style={{ display: isDeletionWindowOpen ? 'block' : 'none' }}>
-                  <button className="catogoryButton"   type="button" >Remove Category</button>             
-                  <button className="catogoryButton"  onClick={windowClose}>Close</button>
-            
-          </div>
-          
-        </div>
-        </div>
-            
-      
-     )
+        <>
+        <Modal show={showAlert} onHide={()=>setAlert(false)}>
+                <Modal.Header closeButton style={{border: '3px solid red'}}>
+                        <p style={{fontWeight:"bold"}}> Catogory Title is Required </p> 
+                </Modal.Header>
+            </Modal>
+       <Modal show={isWindowOpen} onHide={windowClose} centered>
+        <Tabs defaultActiveKey={"addcatogory"} justify>
+            <Tab eventKey={"addcatogory"} title="Add Catogory">
+                <Form>
+                    <Modal.Header >
+                         Add New Catogory 
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                Title
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={inputCatogoryName}
+                                required
+                                placeholder="i.e Grocery"
+                                onChange={(e)=>setCatogoryName(e.target.value)}
+                               
+                                />
+                        </Form.Group>
+                        <Stack direction="horizontal" gap={2}>
+                        <Button onClick={addThisCatogory} >Add</Button>
+                        <Button onClick={windowClose}>Cancel</Button>
+                        </Stack>
+                    </Modal.Body>
+                </Form>
+            </Tab>
+            <Tab eventKey={"removecatogory"} title="Remove Catogory">
+                <Form>
+                    <Modal.Body>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                            Remove The Existing Catogory  
+                            </Form.Label>
+                        </Form.Group>
+                            <div className="d-grid gap-2 mb-3" >
+                                <Button variant="outline-primary"> Grocery</Button>
+                                <Button variant="outline-primary"> Rent</Button>
+                                <Button variant="outline-primary"> Vehicle</Button>
+                                <Button variant="outline-primary"> Medicine</Button>
+                            </div>
+                        <Stack direction="horizontal" gap={2}>
+                        <Button onClick={windowClose}>Remove</Button>
+                        <Button onClick={windowClose}>Cancel</Button>
+                        </Stack>
+                    </Modal.Body>
+                </Form>
+            </Tab>
+        </Tabs>
+       </Modal>
+      </>  
+    )
 }
+
 export default CatogoryWindow;
+
