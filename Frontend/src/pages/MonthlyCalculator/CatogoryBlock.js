@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
 
-function CatogoryBlocks({catogoryKey,catogoryName,total}){
+function CatogoryBlocks({catogoryName,total}){
     const [isSpendingWindowOpen, setSpendingWindowOpen] = useState(false);
     const spendingWindow=()=>{
         setSpendingWindowOpen(true)
@@ -43,17 +43,17 @@ function CatogoryBlocks({catogoryKey,catogoryName,total}){
 
 
            <Card className="mb-4" style={{width:'15vw',alignItems:'center'}}>
-            <Card.Img variant="top"  style={{backgroundColor:"teal", height:"15vh", width: "14vw", marginTop:'2%' ,borderRadius:"5px"}}></Card.Img>
            
             <Card.Body style={{}}>
-                <Stack direction="horizontal" gap={5}>
-                    <p className="me-auto">{catogoryName}</p>
-                    <p>${total}</p>
-                </Stack>
-               
-                <div className="d-grid gap-1">
-                    <Button onClick={spendingWindow}>Add Spending</Button>
-                </div>
+                <Button style={{width:'14vw', height:'15vh', alignContent:'center',background:'#554b5e'}}>
+                    <p>Total:</p>
+                    <h1>{total}</h1>
+                </Button>
+    
+                <p style={{fontWeight:'bold'}}>{catogoryName}</p>
+                
+                    <Button onClick={spendingWindow} style={{width:'14vw', alignContent:'center'}}>Add Spending</Button>
+            
                 <Modal show={isSpendingWindowOpen} onHide={closeSpendingWindow} centered>
                     <Form>
                     <   Modal.Header >
