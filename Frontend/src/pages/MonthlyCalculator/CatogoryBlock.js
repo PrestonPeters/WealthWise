@@ -26,12 +26,11 @@ function CatogoryBlocks({catogoryKey,catogoryName,total}){
             setAmountAlert(true);
             return;
         }
-
+        setDescription('');
+        setSpending('');
         closeSpendingWindow();
 
     }
-
-
     
     return(
         <>
@@ -61,7 +60,7 @@ function CatogoryBlocks({catogoryKey,catogoryName,total}){
                          Add Your Spending 
                     </Modal.Header>
                     <Modal.Body>
-                        <Form.Group className="mb-3">
+                       
                             <Form.Label>
                                 Description
                             </Form.Label>
@@ -71,8 +70,7 @@ function CatogoryBlocks({catogoryKey,catogoryName,total}){
                                 value={inputDescription}
                                 placeholder="i.e XYZ supermarket"
                                 onChange={(description)=>setDescription(description.target.value)}/>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
+                       
                             <Form.Label>
                                 Amount
                             </Form.Label>
@@ -82,7 +80,18 @@ function CatogoryBlocks({catogoryKey,catogoryName,total}){
                                 value={inputSpending} 
                                 placeholder="i.e 100$"
                                 onChange={(amount)=>setSpending(amount.target.value)}/>
-                        </Form.Group>
+                            <Form.Label>
+                                Date
+                            </Form.Label>
+                            <Form.Control
+                                value={new Date().toLocaleDateString()}
+                                />
+                            <Form.Label>
+                                Time
+                            </Form.Label>
+                            <Form.Control
+                                value={new Date().toLocaleTimeString()}
+                                />
                     
                     </Modal.Body>
                     <ModalFooter>
