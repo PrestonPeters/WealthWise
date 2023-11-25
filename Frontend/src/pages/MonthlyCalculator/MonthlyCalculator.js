@@ -7,6 +7,8 @@ import GraphWindow from './GraphWindow';
 import HistoryWindow from './HistoryWindow';
 import CatogoryBlocks from './CatogoryBlock';
 import RemainingBalance from './RemainingBalance';
+ 
+
 
 
 
@@ -37,10 +39,11 @@ function MonthlyCalculator(){
     }
 
     const [catogoryArray, setCatogoryArray] = useState([]);
-    const addNewCatogory =(newCatogoryName)=>{
-        setCatogoryArray([...catogoryArray,newCatogoryName]);
+    const addNewCatogory = (newCatogoryName)=>{
+            setCatogoryArray([...catogoryArray,newCatogoryName]);
     }
-    const[isBalanceWindowOpen, setBalanceWindowOpen] = useState(false);
+    
+    const [isBalanceWindowOpen, setBalanceWindowOpen] = useState(false);
     const openBalanceyWindow =()=>{
         setBalanceWindowOpen(true);
     }
@@ -63,21 +66,11 @@ function MonthlyCalculator(){
         }
     }
 
-   
-    
-
-
     return (
-        <>
-        <Container style={{overflowY:'auto'}}>
-
-                <div className='me-auto'>
-                    <p className="expenseTitle">Manage Your Expenses </p>
-                    <p> Add Your Expenses According To Catogories</p> 
-                      
-                </div>
-                
-                <Stack direction='horizontal' style={{padding:'3%'}}>
+        <div className='monthlyCalculatorPage'>
+        <Container style={{alignItems:'center'}}>
+                    <p className="expenseTitle">Manage Your Expenses </p>          
+                <Stack direction='horizontal' gap={3}>
                     <Button className='upperButtons' onClick={openCatogoryWindow}> Manage Catogories</Button>
                     < CatogoryWindow isWindowOpen={isCatogoryWindowOpen} windowClose={closeCatogoryWindow} addingNewcatogory={addNewCatogory}/>
                     <Button className='upperButtons' onClick={openGraphWindow}>Graphs</Button>
@@ -90,13 +83,21 @@ function MonthlyCalculator(){
                     <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow} showRemainingBalance={showBalance} />
                     
                 </Stack>
-                {catogoryArray.map((catogoryName)=>( <CatogoryBlocks catogoryKey={catogoryName} catogoryName={catogoryName} total={0} /> ))}
+                <p> Add Your Expenses According To Catogories</p><br></br>
+                <div className='cardsPanel'>
+                <CatogoryBlocks catogoryName={'Monthly Grocery'} total={0}></CatogoryBlocks>
+                    <CatogoryBlocks catogoryName={'Medicines'} total={0}></CatogoryBlocks>
+                    <CatogoryBlocks catogoryName={'Vehicle'} total={0}></CatogoryBlocks>
+                    <CatogoryBlocks catogoryName={'Education'} total={0}></CatogoryBlocks>
+                {catogoryArray.map((catogoryElement)=>( <CatogoryBlocks catogoryName={catogoryElement} total={0} /> ))}
+                </div>
+                
                
                
         </Container>
 
         
-         </>       
+         </div>       
                 
     )
 }
