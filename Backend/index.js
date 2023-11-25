@@ -48,6 +48,10 @@ function createDatabase() {
       console.log("Using database 'Tracker'");
       createUserTable();
       createtransactionTable(); 
+      createCatogoryTable();
+      createIncomeTable();
+      createSpendingTable();
+  
     });
   });
 }
@@ -62,6 +66,9 @@ function useDatabase() {
     }
     console.log("Using database 'Tracker'");
     createUserTable();
+    createCatogoryTable();
+      createIncomeTable();
+      createSpendingTable();
   });
 }
 
@@ -182,11 +189,12 @@ app.get('/transactions/:userId', (req, res) => {
 // Create catogory table
 function createCatogoryTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL",
-    (err, results) => {
-      if (err) {
-        console.log(err);
+    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, PRIMARY KEY (id))",
+    (error, results) => {
+      if (error) {
+        console.log(error);
       } else {
+        console.log(results);
         console.log("catogoryTable created successfully");
       }
     }
@@ -195,70 +203,38 @@ function createCatogoryTable() {
 
 // Add to the catogory Table
 
-app.post('/addcatogories', (req, res) => {
-  const category  = req.body;
+app.post('/addcatogories', (request, response) => {
+  const category  = request.body.catogory_name;
   db.query("INSERT INTO catogoryTable (catogory_name) VALUES (?)",[category], (error, results) =>{
       if (error) {
           console.log(error);
         }
-      });
-});
-
-app.get('/addcatogories', (req, res) => {
-  const input_name = req.query.catogory_name;
-
-  db.query("SELECT * FROM catogoryTable WHERE catogory_name = ?", [input_name], (error, results) => {
-      if (error) {
-          console.log(error);
-      }
-  });
-});
-
-
-
-
-// Create expense table
-function createExpenseTable() {
-  db.query(
-    "CREATE TABLE IF NOT EXISTS expenseTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL",
-    (err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("expenseTable created successfully");
-      }
-    }
-  );
-}
-
-// Add to the expense Table
-
-app.post('/addexpenses', (req, res) => {
-  const {category, expense, amount, date, time}  = req.body;
-  db.query("INSERT INTO expenseTable (catogory_name,expense_name,expense_amount, date, time ) VALUES (?,?,?,?,?)",[category, expense, amount, date, time], (error, results) =>{
-      if (error) {
-          console.log(error);
+        else{
+          console.log('successfully added catogory into the table')
         }
       });
 });
 
-app.get('/addexpenses', (req, res) => {
-  const input_catogory = req.params.catogory_name;
 
-  db.query("SELECT * FROM expenseTable WHERE catogory_name = ?", [input_catogory], (error, results) => {
+app.get('/addcatogories', (req, res) => {
+  db.query("SELECT DISTINCT FROM catogoryTable", (error, results) => {
       if (error) {
           console.log(error);
+      }
+      else{
+        console.log('Retrieved all catogories successfully');
       }
   });
 });
 
 
+
 function createIncomeTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount INT NOT NULL",
-    (err, results) => {
-      if (err) {
-        console.log(err);
+    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount INT NOT NULL, PRIMARY KEY (id))",
+    (error, results) => {
+      if (error) {
+        console.log(error);
       } else {
         console.log("expenseTable created successfully");
       }
@@ -268,25 +244,93 @@ function createIncomeTable() {
 
 // Add to the income Table
 
-app.post('/addincome', (req, res) => {
-  const income  = req.body;
-  db.query("INSERT INTO incomeTable (income_amount ) VALUES (?)",[income], (error, results) =>{
+app.post('/addincome', (request, response) => {
+  const income  = request.body.income_amount;
+  db.query("INSERT INTO incomeTable (income_amount) VALUES (?)",[income], (error, results) =>{
       if (error) {
           console.log(error);
+        }else {
+          console.log("Income added successfully into the table");
         }
       });
 });
 
-app.get('/addincome', (req, res) => {
 
-  db.query("SELECT * FROM expenseTable" , (error, results) => {
+app.get('/addincome', (request, response) => {
+  db.query("SELECT DISTINCT FROM incomeTable" , (error, results) => {
       if (error) {
           console.log(error);
+      }else {
+        console.log("Income retrieved successfully");
       }
   });
 });
 
 
+
+
+//Create expense table
+function createSpendingTable() {
+  db.query(
+    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
+    (error, results) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("spendingTable created successfully");
+      }
+    }
+  );
+}
+
+// Add to the expense Table
+
+app.post('/addspendings', (request, res) => {
+  const {category, spending, amount, date, time}  = request.body;
+  db.query("INSERT INTO spendingTable (catogory_name,spending_name,spending_amount, date, time ) VALUES (?,?,?,?,?)",[category, spending, amount, date, time], (error, results) =>{
+      if (error) {
+          console.log(error);
+        }
+        else{
+          console.log('spending added succesfully into the table')
+        }
+      });
+});
+
+app.get('/addspendings/date', (request, response) => {
+  const date = request.query.date;
+  db.query("SELECT * FROM spendingTable WHERE date = ?", [date], (error, results) => {
+      if (error) {
+          console.log(error);
+      }
+      else{
+        console.log('All spendings with given date are retrived successfully');
+      }
+  });
+});
+
+app.get('/addspendings/catogory', (request, response) => {
+  const catogory = request.query.catogory_name;
+  db.query("SELECT * FROM spendingTable WHERE catogory_name = ?", [catogory], (error, results) => {
+      if (error) {
+          console.log(error);
+      }
+      else{
+        console.log('All spendings with given catogory are retrived successfully');
+      }
+  });
+});
+
+app.get('/addspendings', (request, response) => {
+  db.query("SELECT * FROM spendingTable ORDER BY id ASC",(error, results) => {
+      if (error) {
+          console.log(error);
+      }
+      else{
+        console.log('All spendings are retrived successfully');
+      }
+  });
+});
 
 
 
