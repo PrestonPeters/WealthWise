@@ -9,10 +9,6 @@ import Car from './pages/Car_payment/car_pay';
 import Debt from './pages/Debt_cal/debt';
 import Luxury from './pages/luxury_spending/luxury';
 import Vacation from './pages/Vacation_Spending/vacation';
-<<<<<<< HEAD
-import Tracker from './pages/Money_tracker/tracker';
-=======
->>>>>>> 21440f0f0bb38d0837954e00cac51671314ef590
 import MonthlyCalculator from './pages/MonthlyCalculator/MonthlyCalculator';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
