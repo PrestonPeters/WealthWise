@@ -225,6 +225,15 @@ app.post('/addcatogories/delete', (request, response) => {
           console.log('successfully deleted catogory from the table')
         }
       });
+
+      db.query(`DELETE FROM spendingTable WHERE catogory_name='${category}'`, (error, results) =>{
+        if (error) {
+            console.log(error);
+          }
+          else{
+            console.log('successfully deleted catogory from the table')
+          }
+        });
 });
 
 
