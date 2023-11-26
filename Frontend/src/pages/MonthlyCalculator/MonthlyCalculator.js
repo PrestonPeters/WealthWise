@@ -1,6 +1,7 @@
+
 import './MonthlyCalculator.css'
-import {Button,Container,Stack} from "react-bootstrap";
-import { useState } from 'react';
+import {Alert, Button,Container,Stack} from "react-bootstrap";
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CatogoryWindow from './CatogoryWindow';
 import GraphWindow from './GraphWindow';
@@ -43,34 +44,43 @@ function MonthlyCalculator(){
             setCatogoryArray([...catogoryArray,newCatogoryName]);
     }
     
+    const[remainingBalance, setRemainingBalance]= useState(0);
     const [isBalanceWindowOpen, setBalanceWindowOpen] = useState(false);
     const openBalanceyWindow =()=>{
-        setBalanceWindowOpen(true);
-    }
-    const closeBalanceWindow=()=>{
-        setBalanceWindowOpen(false)
+        setBalanceWindowOpen(true);  
     }
 
 
-    const[remainingBalance, setRemainingBalance]= useState('0');
-    const[colour, changeColour]=useState('');
-    const showBalance=(input)=>{
-       
-        setRemainingBalance((remainingBalance) => Number(remainingBalance) +Number(input));
-        buttonColour();
+    const closeBalanceWindow =()=>{
+        setBalanceWindowOpen(false);
+        const getUpdatedBalance= async()=>{
+        const totalIncomeResponse = await fetch('http://localhost:4000/addincome/totalincome');
+        const totalIncome = await totalIncomeResponse.json();
+        setRemainingBalance(totalIncome);
+    }
+    setTimeout(()=>{
+        getUpdatedBalance();
+    },0);
     
-    }
-    const buttonColour =()=>{
-        if(Number(remainingBalance)>=0){
-                changeColour('red');
-        }
-    }
+}
+    
+
+    useEffect(()=>{
+        const getUpdatedBalance= async()=>{
+            setBalanceWindowOpen(false);
+            const totalIncomeResponse = await fetch('http://localhost:4000/addincome/totalincome');
+            const totalIncome = await totalIncomeResponse.json();
+            setRemainingBalance(totalIncome);}
+        getUpdatedBalance();
+    },[]);
+    
+
 
     return (
         <div className='monthlyCalculatorPage'>
-        <Container style={{alignItems:'center'}}>
-                    <p className="expenseTitle">Manage Your Expenses </p>          
-                <Stack direction='horizontal' gap={3}>
+        <Container style={{ alignItems:'center'}}>
+                    <p className="expenseTitle">Manage Your Spendings </p>          
+                    <Stack direction='horizontal' gap={3}>
                     <Button className='upperButtons' onClick={openCatogoryWindow}> Manage Catogories</Button>
                     < CatogoryWindow isWindowOpen={isCatogoryWindowOpen} windowClose={closeCatogoryWindow} addingNewcatogory={addNewCatogory}/>
                     <Button className='upperButtons' onClick={openGraphWindow}>Graphs</Button>
@@ -78,17 +88,17 @@ function MonthlyCalculator(){
                     <Button className='upperButtons'onClick={openHistoryWindow}>History</Button>   
                     <HistoryWindow isWindowOpen={isHistroyWindowOpen} windowClose={closeHistoryWindow}/>
                     <Button className='upperButtons' onClick={openBalanceyWindow}
-                     style={{backgroundColor:buttonColour ? colour:''}}
+                     style={{backgroundColor:'red'}}
                     >Remaining Balance: <h1>${remainingBalance}</h1> </Button>
-                    <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow} showRemainingBalance={showBalance} />
+                    <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow}/>
                     
                 </Stack>
-                <p> Add Your Expenses According To Catogories</p><br></br>
+                <p> Add Your Spendings According To Catogories</p><br></br>
                 <div className='cardsPanel'>
                 <CatogoryBlocks catogoryName={'Monthly Grocery'} total={0}></CatogoryBlocks>
                     <CatogoryBlocks catogoryName={'Medicines'} total={0}></CatogoryBlocks>
                     <CatogoryBlocks catogoryName={'Vehicle'} total={0}></CatogoryBlocks>
-                    <CatogoryBlocks catogoryName={'Education'} total={0}></CatogoryBlocks>
+                    <CatogoryBlocks catogoryName={'Rent'} total={0}></CatogoryBlocks>
                 {catogoryArray.map((catogoryElement)=>( <CatogoryBlocks catogoryName={catogoryElement} total={0} /> ))}
                 </div>
                 
@@ -98,7 +108,7 @@ function MonthlyCalculator(){
 
         
          </div>       
-                
+            
     )
 }
 export default MonthlyCalculator;
