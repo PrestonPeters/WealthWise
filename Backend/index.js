@@ -49,7 +49,7 @@ function createDatabase() {
       createUserTable();
       createtransactionTable(); 
       createCatogoryTable();
-      createIncomeTable();
+      createBalanceTable();
       createSpendingTable();
   
     });
@@ -67,7 +67,7 @@ function useDatabase() {
     console.log("Using database 'Tracker'");
     createUserTable();
     createCatogoryTable();
-      createIncomeTable();
+    createBalanceTable();
       createSpendingTable();
   });
 }
@@ -189,7 +189,7 @@ app.get('/transactions/:userId', (req, res) => {
 // Create catogory table
 function createCatogoryTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL,catogory_total INT NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
@@ -205,7 +205,7 @@ function createCatogoryTable() {
 
 app.post('/addcatogories', (request, response) => {
   const category  = request.body.catogory_name;
-  db.query("INSERT INTO catogoryTable (catogory_name) VALUES (?)",[category], (error, results) =>{
+  db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",[category,0], (error, results) =>{
       if (error) {
           console.log(error);
         }
@@ -237,8 +237,8 @@ app.post('/addcatogories/delete', (request, response) => {
 });
 
 
-app.get('/addcatogories', (req, res) => {
-  db.query("SELECT DISTINCT FROM catogoryTable", (error, results) => {
+app.get('/addcatogories', (request, response) => {
+  db.query("SELECT catogory_name,catogory_total FROM catogoryTable", (error, results) => {
       if (error) {
           console.log(error);
       }
@@ -251,54 +251,44 @@ app.get('/addcatogories', (req, res) => {
 
 
 
-function createIncomeTable() {
+function createBalanceTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount INT NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount INT NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
-        console.log("expenseTable created successfully");
+        console.log("balanceTable created successfully");
       }
     }
   );
 }
 
-// Add to the income Table
+// Add to the balance Table
 
-app.post('/addincome', (request, response) => {
-  const income  = request.body.income_amount;
-  db.query("INSERT INTO incomeTable (income_amount) VALUES (?)",[income], (error, results) =>{
+app.post('/addbalance', (request, response) => {
+  const balance  = request.body.balance_amount;
+  db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}'`, (error, results) =>{
       if (error) {
           console.log(error);
         }else {
-          console.log("Income added successfully into the table");
+          console.log("Balance updated successfully into the table");
         }
       });
 });
 
-
-app.get('/addincome', (request, response) => {
-  db.query("SELECT * FROM incomeTable ORDER BY id DESC LIMIT 1" , (error, results) => {
+app.get('/addbalance', (request, response) => {
+  db.query("SELECT balance_amount FROM balanceTable" , (error, results) => {
       if (error) {
           console.log(error);
       }else {
-        response.json(results[0]);
-        console.log("Income retrieved successfully");
+        response.json(results[0].balance_amount);
+        console.log("Balance retrieved successfully");
       }
   });
 });
 
-app.get('/addincome/totalincome', (request, response) => {
-  db.query("SELECT SUM(income_amount) AS totalIncome FROM incomeTable" , (error, results) => {
-      if (error) {
-          console.log(error);
-      }else {
-        response.json(results[0].totalIncome);
-        console.log("Income retrieved successfully");
-      }
-  });
-});
+
 
 
 
@@ -329,6 +319,23 @@ app.post('/addspendings', (request, response) => {
           console.log('spending added succesfully into the table')
         }
       });
+
+      db.query(`UPDATE catogoryTable SET catogory_total=catogory_total+'${expense_amount}' WHERE catogory_name='${catogory_name}'` , (error, results) =>{
+        if (error) {
+            console.log(error);
+          }
+          else{
+            console.log('successfully added catogory into the table')
+          }
+        });
+
+        db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}'`, (error, results) =>{
+          if (error) {
+              console.log(error);
+            }else {
+              console.log("Balance updated successfully into the table");
+            }
+          });
 });
 
 app.get('/addspendings/date', (request, response) => {
