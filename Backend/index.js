@@ -257,10 +257,21 @@ app.post('/addincome', (request, response) => {
 
 
 app.get('/addincome', (request, response) => {
-  db.query("SELECT DISTINCT FROM incomeTable" , (error, results) => {
+  db.query("SELECT * FROM incomeTable ORDER BY id DESC LIMIT 1" , (error, results) => {
       if (error) {
           console.log(error);
       }else {
+        console.log("Income retrieved successfully");
+      }
+  });
+});
+
+app.get('/addincome/totalincome', (request, response) => {
+  db.query("SELECT SUM(income_amount) AS totalIncome FROM incomeTable" , (error, results) => {
+      if (error) {
+          console.log(error);
+      }else {
+        response.json({totalIncome});
         console.log("Income retrieved successfully");
       }
   });
@@ -272,7 +283,7 @@ app.get('/addincome', (request, response) => {
 //Create expense table
 function createSpendingTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, spending_name VARCHAR(500) NOT NULL, spending_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
@@ -285,7 +296,7 @@ function createSpendingTable() {
 
 // Add to the expense Table
 
-app.post('/addspendings', (request, res) => {
+app.post('/addspendings', (request, response) => {
   const {category, spending, amount, date, time}  = request.body;
   db.query("INSERT INTO spendingTable (catogory_name,spending_name,spending_amount, date, time ) VALUES (?,?,?,?,?)",[category, spending, amount, date, time], (error, results) =>{
       if (error) {
@@ -309,14 +320,27 @@ app.get('/addspendings/date', (request, response) => {
   });
 });
 
-app.get('/addspendings/catogory', (request, response) => {
+app.get('/addspendings/catogorytotal', (request, response) => {
   const catogory = request.query.catogory_name;
-  db.query("SELECT * FROM spendingTable WHERE catogory_name = ?", [catogory], (error, results) => {
+  db.query("SELECT SUM(spending_amount) AS catogoryTotal FROM spendingTable WHERE catogory_name = ?", [catogory], (error, results) => {
       if (error) {
           console.log(error);
       }
       else{
-        console.log('All spendings with given catogory are retrived successfully');
+        response.json({catogoryTotal});
+        console.log('Catogory total has retrived successfully');
+      }
+  });
+});
+
+app.get('/addspendings/total', (request, response) => {
+  db.query("SELECT SUM(spending_amount) AS total FROM spendingTable", (error, results) => {
+      if (error) {
+          console.log(error);
+      }
+      else{
+        response.json({total});
+        console.log('Total amount has retrived successfully');
       }
   });
 });
