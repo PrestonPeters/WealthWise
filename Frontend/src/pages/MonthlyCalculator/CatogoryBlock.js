@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
 
-function CatogoryBlocks({catogoryName,total}){
+function CatogoryBlocks({catogoryName,total_spending}){
     const [isSpendingWindowOpen, setSpendingWindowOpen] = useState(false);
     const spendingWindow=()=>{
         setSpendingWindowOpen(true)
@@ -11,21 +11,28 @@ function CatogoryBlocks({catogoryName,total}){
     }
 
     const [inputDescription, setDescription]= useState('');
-    const[isDescriptionAlert, setDescriptionAlert]= useState(false);
-
     const [inputSpending, setSpending]= useState('');
-    const[isAmountAlert, setAmountAlert]= useState(false);
-
+    const [catogory] = useState(catogoryName);
+   
+   
     const addSpending=()=>{
-        if(inputDescription.length===0){
-            setDescriptionAlert(true);
-            return;
-        }
-        
         if(inputSpending.length===0 || inputSpending <=0 || isNaN(inputSpending)){
-            setAmountAlert(true);
+            alert('Please Input Complete and valid Information');
             return;
         }
+        fetch('http://localhost:4000/addspendings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({catogory_name:catogory,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString()}),
+        })
+        .then((response)=>{
+            console.log(response);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
         setDescription('');
         setSpending('');
         closeSpendingWindow();
@@ -34,25 +41,17 @@ function CatogoryBlocks({catogoryName,total}){
     
     return(
         <>
-             <Modal show={isDescriptionAlert || isAmountAlert } onHide={()=>setDescriptionAlert(false) || setAmountAlert(false)}>
-                <Modal.Header closeButton style={{border: '3px solid red'}}>
-                        <p style={{fontWeight:"bold"}}> Please Input Complete and valid Information  </p> 
-                </Modal.Header>
-            </Modal>
-        
-
-
-           <Card className="mb-4" style={{width:'15vw',alignItems:'center'}}>
+           <Card className="mb-4" style={{width:'220px',alignItems:'center'}}>
            
             <Card.Body style={{}}>
-                <Button style={{width:'14vw', height:'15vh', alignContent:'center',background:'#554b5e'}}>
+                <Button style={{width:'200px', height:'110px', alignContent:'center',background:'#554b5e'}}>
                     <p>Total:</p>
-                    <h1>{total}</h1>
+                    <h1>${total_spending}</h1>
                 </Button>
     
                 <p style={{fontWeight:'bold'}}>{catogoryName}</p>
                 
-                    <Button onClick={spendingWindow} style={{width:'14vw', alignContent:'center'}}>Add Spending</Button>
+                    <Button onClick={spendingWindow} style={{width:'200px', alignContent:'center'}}>Add Spending</Button>
             
                 <Modal show={isSpendingWindowOpen} onHide={closeSpendingWindow} centered>
                     <Form>
@@ -60,17 +59,26 @@ function CatogoryBlocks({catogoryName,total}){
                          Add Your Spending 
                     </Modal.Header>
                     <Modal.Body>
+                            <Form.Label>
+                                Catogory
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                required
+                                value={catogoryName}
+                                style={{backgroundColor:'#d1d7e0'}}
+                               />
                        
                             <Form.Label>
                                 Description
                             </Form.Label>
-                            <Form.Control
+                            <Form.Control 
                                 type="text"
                                 required
                                 value={inputDescription}
                                 placeholder="i.e XYZ supermarket"
                                 onChange={(description)=>setDescription(description.target.value)}/>
-                       
+                                
                             <Form.Label>
                                 Amount
                             </Form.Label>
@@ -78,19 +86,21 @@ function CatogoryBlocks({catogoryName,total}){
                                 type="number"
                                 required
                                 value={inputSpending} 
-                                placeholder="i.e 100$"
+                                placeholder="i.e $100"
                                 onChange={(amount)=>setSpending(amount.target.value)}/>
                             <Form.Label>
                                 Date
                             </Form.Label>
                             <Form.Control
                                 value={new Date().toLocaleDateString()}
-                                />
+                                style={{backgroundColor:'#d1d7e0'}}/>
+                               
                             <Form.Label>
                                 Time
                             </Form.Label>
                             <Form.Control
                                 value={new Date().toLocaleTimeString()}
+                                style={{backgroundColor:'#d1d7e0'}}
                                 />
                     
                     </Modal.Body>

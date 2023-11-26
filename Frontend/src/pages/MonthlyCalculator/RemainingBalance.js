@@ -8,12 +8,12 @@ function RemainingBalance({isWindowOpen ,windowClose}){
            alert('Please Input Valid amount ');
             return;
         } 
-        fetch('http://localhost:4000/addincome', {
+        fetch('http://localhost:4000/addbalance', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({income_amount: inputIncome}),
+            body: JSON.stringify({balance_amount: inputIncome}),
         })
         .then((response)=>{
             console.log(response);
