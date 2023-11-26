@@ -1,15 +1,26 @@
 import { useState } from "react";
 import { Button, Card, Form, Modal, Stack, ModalFooter } from "react-bootstrap";
 
-function RemainingBalance({isWindowOpen ,windowClose, showRemainingBalance}){
+function RemainingBalance({isWindowOpen ,windowClose}){
     const [inputIncome, setIncome]= useState('');
-    const[isAlert, setAlert]= useState(false);
     const saveIncome =()=>{
         if(inputIncome.length===0 || inputIncome<=0 || isNaN(inputIncome)){
-            setAlert(true);
+           alert('Please Input Valid amount ');
             return;
-        }
-        showRemainingBalance(inputIncome);
+        } 
+        fetch('http://localhost:4000/addincome', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({income_amount: inputIncome}),
+        })
+        .then((response)=>{
+            console.log(response);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
         setIncome('');
         windowClose();
     }
@@ -17,11 +28,6 @@ function RemainingBalance({isWindowOpen ,windowClose, showRemainingBalance}){
 
     return(
         <>
-        <Modal show={isAlert} onHide={()=>setAlert(false)}>
-                <Modal.Header closeButton style={{border: '3px solid red'}}>
-                        <p style={{fontWeight:"bold"}}>Please Input Valid amount </p> 
-                </Modal.Header>
-            </Modal>
         <Modal show={isWindowOpen} onHide={windowClose} centered>
                     <Form>
                     <   Modal.Header >
