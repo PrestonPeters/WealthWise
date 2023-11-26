@@ -215,6 +215,18 @@ app.post('/addcatogories', (request, response) => {
       });
 });
 
+app.post('/addcatogories/delete', (request, response) => {
+  const category  = request.body.catogory_name;
+  db.query(`DELETE FROM catogoryTable WHERE catogory_name='${category}'`, (error, results) =>{
+      if (error) {
+          console.log(error);
+        }
+        else{
+          console.log('successfully deleted catogory from the table')
+        }
+      });
+});
+
 
 app.get('/addcatogories', (req, res) => {
   db.query("SELECT DISTINCT FROM catogoryTable", (error, results) => {
@@ -222,6 +234,7 @@ app.get('/addcatogories', (req, res) => {
           console.log(error);
       }
       else{
+        response.json(results);
         console.log('Retrieved all catogories successfully');
       }
   });
@@ -261,6 +274,7 @@ app.get('/addincome', (request, response) => {
       if (error) {
           console.log(error);
       }else {
+        response.json(results[0]);
         console.log("Income retrieved successfully");
       }
   });
@@ -271,7 +285,7 @@ app.get('/addincome/totalincome', (request, response) => {
       if (error) {
           console.log(error);
       }else {
-        response.json({totalIncome});
+        response.json(results[0].totalIncome);
         console.log("Income retrieved successfully");
       }
   });
@@ -283,7 +297,7 @@ app.get('/addincome/totalincome', (request, response) => {
 //Create expense table
 function createSpendingTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL, spending_name VARCHAR(500) NOT NULL, spending_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
@@ -297,8 +311,8 @@ function createSpendingTable() {
 // Add to the expense Table
 
 app.post('/addspendings', (request, response) => {
-  const {category, spending, amount, date, time}  = request.body;
-  db.query("INSERT INTO spendingTable (catogory_name,spending_name,spending_amount, date, time ) VALUES (?,?,?,?,?)",[category, spending, amount, date, time], (error, results) =>{
+  const {catogory_name, expense_name, expense_amount, date, time}  = request.body;
+  db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[catogory_name, expense_name, expense_amount, date, time], (error, results) =>{
       if (error) {
           console.log(error);
         }
@@ -327,7 +341,7 @@ app.get('/addspendings/catogorytotal', (request, response) => {
           console.log(error);
       }
       else{
-        response.json({catogoryTotal});
+        response.json(results[0].catogoryTotal);
         console.log('Catogory total has retrived successfully');
       }
   });
@@ -339,7 +353,7 @@ app.get('/addspendings/total', (request, response) => {
           console.log(error);
       }
       else{
-        response.json({total});
+        response.json(results[0].total);
         console.log('Total amount has retrived successfully');
       }
   });
