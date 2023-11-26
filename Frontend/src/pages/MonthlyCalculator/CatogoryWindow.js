@@ -1,28 +1,57 @@
 import { Button, Modal, ModalFooter, Tab, Tabs , Form, Stack} from "react-bootstrap";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
-
-function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
+function CatogoryWindow({isWindowOpen ,windowClose}){
     const [inputCatogoryName, setCatogoryName] = useState('');
-    const [showAlert, setAlert] = useState(false);
-
-
+    const [deleteCatogoryName, setdeleteCatogoryName] = useState('');
     const addThisCatogory=()=>{
         if(inputCatogoryName.length===0){
-            setAlert(true);
+            alert('Catogory Title is Required');
             return;
         }
-        addingNewcatogory(inputCatogoryName);
+        fetch('http://localhost:4000/addcatogories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({catogory_name:inputCatogoryName}),
+        })
+        .then((response)=>{
+            console.log(response);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
         setCatogoryName('');
-        windowClose();}
+        windowClose(); 
+    }
+
+    const removeThisCatogory=()=>{
+        if(deleteCatogoryName.length===0){
+            alert('Catogory Title is Required');
+            return;
+        }
+        fetch('http://localhost:4000/addcatogories/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({catogory_name:deleteCatogoryName}),
+        })
+        .then((response)=>{
+            console.log(response);
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+        setdeleteCatogoryName('');
+        windowClose(); 
+    }
+    
 
     return(
         <>
-        <Modal show={showAlert} onHide={()=>setAlert(false)}>
-                <Modal.Header closeButton style={{border: '3px solid red'}}>
-                        <p style={{fontWeight:"bold"}}> Catogory Title is Required </p> 
-                </Modal.Header>
-            </Modal>
        <Modal show={isWindowOpen} onHide={windowClose} centered>
         <Tabs defaultActiveKey={"addcatogory"} justify>
             <Tab eventKey={"addcatogory"} title="Add Catogory">
@@ -36,11 +65,12 @@ function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
                                 Title
                             </Form.Label>
                             <Form.Control
-                                type="text"
+                                type="text" 
                                 value={inputCatogoryName}
                                 required
                                 placeholder="i.e Grocery"
-                                onChange={(catogory)=>setCatogoryName(catogory.target.value)}
+                                onChange={(event)=>setCatogoryName(event.target.value)}
+                                
                                
                                 />
                         </Form.Group>
@@ -52,16 +82,25 @@ function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
                 </Form>
             </Tab>
             <Tab eventKey={"removecatogory"} title="Remove Catogory">
-                <Form>
+            <Form>
+                    <Modal.Header >
+                         Remove Existing Catogory 
+                    </Modal.Header>
                     <Modal.Body>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                            Remove The Existing Catogory  
+                                Name of catogory (case sensitive)
                             </Form.Label>
+                            <Form.Control
+                                type="text" 
+                                value={deleteCatogoryName}
+                                required
+                                placeholder="i.e Grocery"
+                                onChange={(event)=>setdeleteCatogoryName(event.target.value)}
+                                />
                         </Form.Group>
-                           
                         <Stack direction="horizontal" gap={2}>
-                        <Button onClick={windowClose}>Remove</Button>
+                        <Button onClick={removeThisCatogory} >Remove</Button>
                         <Button onClick={windowClose}>Cancel</Button>
                         </Stack>
                     </Modal.Body>
@@ -74,4 +113,3 @@ function CatogoryWindow({isWindowOpen ,windowClose,addingNewcatogory}){
 }
 
 export default CatogoryWindow;
-
