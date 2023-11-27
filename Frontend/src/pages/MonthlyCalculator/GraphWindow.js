@@ -1,8 +1,21 @@
 import { useState, useEffect } from "react";
 import { Button, Modal, ModalFooter, Tab, Tabs , Form, Stack} from "react-bootstrap";
-import { PieChart } from '@mui/x-charts';
+import { BarChart, PieChart } from '@mui/x-charts';
 
 function GraphWindow({ isWindowOpen, windowClose }) {
+  const [xAxisDate,setXAxisDate]= useState([]);
+const [yAxisAmount,setYAxisAmount]= useState([]);
+  useEffect(()=>{
+    const getUpdatedSpendingList= async()=>{
+    const spendingListResponse = await fetch('http://localhost:4000/addspendings/date');
+    const updatedSpendingList = await spendingListResponse.json();
+    setXAxisDate((xAxisDate)=>[...xAxisDate,...updatedSpendingList.map((spendingElement)=>spendingElement.date)]);
+    setYAxisAmount((yAxisAmount)=>[...yAxisAmount,...updatedSpendingList.map((spendingElement)=>spendingElement.total_spending)]);
+    }
+    getUpdatedSpendingList();
+},[]);
+
+
   const [chartData, setChartData]= useState([]);
   useEffect(()=>{
     const getUpdatedCatogoryList= async()=>{
@@ -17,6 +30,8 @@ function GraphWindow({ isWindowOpen, windowClose }) {
     getUpdatedCatogoryList();
 },[]);
 
+
+
   
     return(
       <div className='use_bootstrap'>
@@ -26,7 +41,12 @@ function GraphWindow({ isWindowOpen, windowClose }) {
                     <Modal.Header >
                     Compare Your Daily Spending Through Visualization
                     </Modal.Header>
-                    <Modal.Body style={{maxWidth:'800px', overflowX:'auto'}}>          
+                    <Modal.Body style={{maxWidth:'800px',maxHeight:'800px', overflowX:'auto', overflowY:'auto'}}> 
+                    <BarChart
+                        xAxis={[{scaleType:'band',data:xAxisDate }]}
+                        series={[{data:yAxisAmount}]}
+                
+                    />         
                     </Modal.Body>
                     <ModalFooter>
                     <Button onClick={windowClose}>Close</Button>
