@@ -70,7 +70,7 @@ function useDatabase() {
     createCatogoryTable();
     createBalanceTable();
     createIncomeTable();
-      createSpendingTable();
+    createSpendingTable();
   });
 }
 
@@ -196,7 +196,13 @@ function createCatogoryTable() {
       if (error) {
         console.log(error);
       } else {
-        console.log(results);
+        /** 
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Monthly Grocery',610]);
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Rent',600]);
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Gym',696]);
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Medicine',365]);
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Vehicle',678]);
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['School',576]) **/
         console.log("catogoryTable created successfully");
       }
     }
@@ -262,6 +268,7 @@ function createBalanceTable() {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
+        /** 
         db.query(
           "INSERT INTO balanceTable (balance_amount) VALUES (0)",
           (error, results) => {
@@ -271,7 +278,7 @@ function createBalanceTable() {
               console.log("Balance 0 added successfully");
             }
           }
-        );
+        );**/
       }
     }
   );
@@ -299,6 +306,7 @@ function createIncomeTable() {
         console.log(error);
       } else {
         console.log("incomeTable created successfully");
+        /** 
         db.query(
           "INSERT INTO incomeTable (income_amount) VALUES (0)",
           (error, results) => {
@@ -308,7 +316,7 @@ function createIncomeTable() {
               console.log("Income 0 added successfully");
             }
           }
-        );
+        );**/
       }
     }
   );
@@ -360,6 +368,48 @@ function createSpendingTable() {
       if (error) {
         console.log(error);
       } else {
+        /** 
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',45, '10/29/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Window Repair',150, '10/30/2023', '6:02:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Books',200, '10/30/2023', '11:02:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',100, '10/31/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Pens',15, '11/1/2023', '9:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Notebooks',100, '11/1/2023', '9:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Cloths',45, '11/2/2023', '5:02:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Shoes',150, '11/2/2023', '5:03:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMakert',80, '11/3/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',80, '11/5/2023', '9:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Fever',40, '11/5/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'Home repair',300, '11/6/2023', '1:02:59 PM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/7/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',75, '11/8/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',94, '11/9/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',60, '11/10/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Instruments',371, '11/11/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Cisco',46, '11/12/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Fresh Market',35, '11/13/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Parents medicine',160, '11/14/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Shoes',45, '11/15/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'gas',75, '11/16/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'gas',40, '11/17/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Member ship',100, '11/18/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',40, '11/19/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Cold',15, '11/20/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Bag',76, '11/21/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',73, '11/22/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Safety kit',95, '11/23/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',62, '11/24/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',10, '11/24/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',100, '11/25/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'cloths',30, '11/25/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '10/26/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '10/26/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '10/26/2023', '11:02:59 AM']);
+        **/
+        
         console.log("spendingTable created successfully");
       }
     }
