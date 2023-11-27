@@ -10,9 +10,6 @@ import CatogoryBlocks from './CatogoryBlock';
 import RemainingBalance from './RemainingBalance';
  
 
-
-
-
 function MonthlyCalculator(){
     const[isCatogoryWindowOpen, setCatogoryWindowOpen] = useState(false);
     const[catogoryList, setCatogoryList] = useState([]);
@@ -59,7 +56,8 @@ function MonthlyCalculator(){
         setHistoryWindowOpen(false)
     }
 
-    const[remainingBalance, setRemainingBalance]= useState('');
+    const[remainingBalance, setRemainingBalance]= useState();
+    const [lastIncome, setLastIncome]=useState();
     const [isBalanceWindowOpen, setBalanceWindowOpen] = useState(false);
     const openBalanceyWindow =()=>{
         setBalanceWindowOpen(true);  
@@ -82,8 +80,14 @@ function MonthlyCalculator(){
             const totalBalanceResponse = await fetch('http://localhost:4000/addbalance');
             const totalBalance = await totalBalanceResponse.json();
             setRemainingBalance(totalBalance);}
+
+        const getIncomeBalance=async()=>{
+            const totalIncomeResponse = await fetch('http://localhost:4000/addincome');
+            const totalIncome = await totalIncomeResponse.json();
+            setLastIncome(totalIncome);
+        }
         getUpdatedBalance();
-    
+        getIncomeBalance();
     },[]);
 
 
@@ -104,7 +108,8 @@ function MonthlyCalculator(){
                     <Button className='upperButtons'onClick={openHistoryWindow}>History</Button>   
                     <HistoryWindow isWindowOpen={isHistroyWindowOpen} windowClose={closeHistoryWindow}/>
                     <Button className='upperButtons' onClick={openBalanceyWindow}
-                     style={{backgroundColor:'red'}}
+                     style={{color:'black',  backgroundColor:((lastIncome/2)<=remainingBalance)?'#38cf17':
+                     ((lastIncome/2)>remainingBalance && (lastIncome/4)<=remainingBalance )?'#fcf403': 'red'}}
                     >Remaining Balance: <h1>${remainingBalance}</h1> </Button>
                     <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow}/>
                     
