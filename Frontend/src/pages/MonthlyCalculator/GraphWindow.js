@@ -1,24 +1,23 @@
 import { useState, useEffect } from "react";
 import { Button, Modal, ModalFooter, Tab, Tabs , Form, Stack} from "react-bootstrap";
-import Chart from "react-google-charts";
+import { PieChart } from '@mui/x-charts';
+
 function GraphWindow({ isWindowOpen, windowClose }) {
-    const [pieChartData, setPieChartData] = useState([["Catogory name", "catogory total"]]);
-    useEffect(()=>{
-        const getUpdatedCatogoryList= async()=>{
-        const catogoryListResponse = await fetch('http://localhost:4000/addcatogories');
-        const updatedcatogoryList = await catogoryListResponse.json();
-        setPieChartData([...pieChartData, ...updatedcatogoryList.map((catogoryElement)=> [catogoryElement.catogory_name, catogoryElement.catogory_total])]);
-        }
-        getUpdatedCatogoryList();
-    },[]);
-
-    const pieChartOptions={
-        title:"Your spendings according to catogories",
-        pieHole: 0.4,
-        is3D: false
-
+  const [chartData, setChartData]= useState([]);
+  useEffect(()=>{
+    const getUpdatedCatogoryList= async()=>{
+    const catogoryListResponse = await fetch('http://localhost:4000/addcatogories');
+    const updatedcatogoryList = await catogoryListResponse.json();
+    setChartData(updatedcatogoryList.map((element,index)=>({
+      id: index,
+      label: element.catogory_name,
+      value:element.catogory_total
+    })))
     }
-      
+    getUpdatedCatogoryList();
+},[]);
+
+  
     return(
       <div className='use_bootstrap'>
        <Modal size="lg"  show={isWindowOpen} onHide={windowClose} centered>
@@ -27,7 +26,7 @@ function GraphWindow({ isWindowOpen, windowClose }) {
                     <Modal.Header >
                     Compare Your Daily Spending Through Visualization
                     </Modal.Header>
-                    <Modal.Body>                
+                    <Modal.Body style={{maxWidth:'800px', overflowX:'auto'}}>          
                     </Modal.Body>
                     <ModalFooter>
                     <Button onClick={windowClose}>Close</Button>
@@ -38,16 +37,24 @@ function GraphWindow({ isWindowOpen, windowClose }) {
             <Tab eventKey={"pieChart"} title="Pie Chart">
     
                     <Modal.Header>
-                        Compare Your Monthly Spending Through Visualization 
+                        Compare Your Monthly Spending Through Using Pie Chart 
                     </Modal.Header>
                     <Modal.Body style={{alignItems:'center'}}>
-                        <Chart 
-                        chartType="PieChart"
-                        width="100%"
-                        height="100%"
-                        data={pieChartData}
-                        options={pieChartOptions}
-                        />
+                        <PieChart
+                        series={[
+                          {
+                            data: chartData,
+                            innerRadius: 70,
+                            outerRadius: 200,
+                            paddingAngle: 1.5,
+                            startAngle: -180,
+                            endAngle: 180,
+                            cornerRadius:5
+
+
+
+                          }
+                        ]} />
                        
                     </Modal.Body>
                     <ModalFooter>
