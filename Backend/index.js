@@ -205,7 +205,7 @@ function createCatogoryTable() {
       if (error) {
         console.log(error);
       } else {
-        /** 
+        /**  
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Monthly Grocery',610]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Rent',600]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Gym',696]);
@@ -294,7 +294,7 @@ function createBalanceTable() {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
-         /** 
+         /**  
         db.query(
           "INSERT INTO balanceTable (balance_amount) VALUES (0.0)",
           (error, results) => {
@@ -346,7 +346,7 @@ function createIncomeTable() {
       } 
       else{
         console.log("incomeTable created successfully");
-         /** 
+        /** 
         db.query(
           "INSERT INTO incomeTable (income_amount) VALUES (0.0)",
           (error, results) => {
@@ -423,7 +423,7 @@ function createSpendingTable() {
       if (error) {
         console.log(error);
       } else {
-         /** 
+        /** 
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM']);
@@ -460,10 +460,9 @@ function createSpendingTable() {
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',10, '11/24/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',100, '11/25/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'cloths',30, '11/25/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '10/26/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '10/26/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '10/26/2023', '11:02:59 AM']);
-        
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '11/26/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '11/26/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '11/26/2023', '11:02:59 AM']);
         **/
         console.log("spendingTable created successfully");
       }
@@ -480,7 +479,7 @@ function createSpendingTable() {
  */
 app.post('/addspendings', (request, response) => {
     const {catogory_name, expense_name, expense_amount, date, time}  = request.body;
-    db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[catogory_name, expense_name, expense_amount, date, time], (error, results) =>{
+    db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[catogory_name, expense_name, expense_amount,date, time], (error, results) =>{
         if (error) {
           console.log(error);
         }
@@ -512,13 +511,14 @@ app.post('/addspendings', (request, response) => {
  * GET method to retrieve all entries from the spendingTable catogorized by the date.
  */
 app.get('/addspendings/date', (request, response) => {
-  db.query("SELECT DISTINCT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date", (error, results) => {
+  db.query(" SELECT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date ORDER BY STR_TO_DATE(date,'%m/%d/%Y')", (error, results) => {
       if (error) {
           console.log(error);
       }
       else{
         response.json(results);
         console.log('All spendings with given date are retrived successfully');
+        console.log(response);
       }
   });
 });
