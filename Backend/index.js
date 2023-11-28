@@ -188,7 +188,16 @@ app.get('/transactions/:userId', (req, res) => {
 });
 
 
-// Create catogory table
+
+//-------------------------------------------------------- Database tables for Monthly calculator-----------------------------------------------------------//
+
+
+
+/**
+ * Created catogoryTable which contains columes catogory_name and catogory_total to manage all catogories. Few catgories 
+ *  has been added initially as fake data in order to create graphs. The queries to add initial data to the catogoryTable
+ * has been commentted out in order to avoid further addition of same catogories.
+ */
 function createCatogoryTable() {
   db.query(
     "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL,catogory_total DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
@@ -196,56 +205,67 @@ function createCatogoryTable() {
       if (error) {
         console.log(error);
       } else {
-        
+        /** 
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Monthly Grocery',610]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Rent',600]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Gym',696]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Medicine',365]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Vehicle',678]);
-        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['School',576]) 
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['School',576]) **/
         console.log("catogoryTable created successfully");
       }
     }
   );
 }
 
-// Add to the catogory Table
 
+
+/**
+ *  POST method to add new catogory to the catogoryTable with catogory_total as 0
+ */
 app.post('/addcatogories', (request, response) => {
   const category  = request.body.catogory_name;
   db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",[category,0.0], (error, results) =>{
       if (error) {
           console.log(error);
-        }
-        else{
+      }
+      else{
           console.log('successfully added catogory into the table')
-        }
-      });
+      }
+    });
 });
 
-app.post('/addcatogories/delete', (request, response) => {
-  const category  = request.body.catogory_name;
-  db.query(`DELETE FROM catogoryTable WHERE catogory_name='${category}'`, (error, results) =>{
-      if (error) {
-          console.log(error);
-        }
-        else{
-          console.log('successfully deleted catogory from the table')
-        }
-      });
 
-      db.query(`DELETE FROM spendingTable WHERE catogory_name='${category}'`, (error, results) =>{
+
+/**
+ * POST method to delete catogory from the catogoryTable as well as to delete each entry from
+ * spendingTable corresponding to given catogory
+ */
+app.post('/addcatogories/delete', (request, response) => {
+    const category  = request.body.catogory_name;
+    db.query(`DELETE FROM catogoryTable WHERE catogory_name='${category}'`, (error, results) =>{
         if (error) {
             console.log(error);
-          }
-          else{
+        }
+        else{
             console.log('successfully deleted catogory from the table')
-          }
-        });
-      
+        }
+    });
+    db.query(`DELETE FROM spendingTable WHERE catogory_name='${category}'`, (error, results) =>{
+        if (error) {
+            console.log(error);
+        }
+        else{
+            console.log('successfully deleted catogory from the table')
+        }
+    });     
 });
 
 
+
+/**
+ * GET method to retrieve all catogories from catogoryTable along with their catogory_total 
+ */
 app.get('/addcatogories', (request, response) => {
   db.query("SELECT catogory_name,catogory_total FROM catogoryTable", (error, results) => {
       if (error) {
@@ -260,6 +280,12 @@ app.get('/addcatogories', (request, response) => {
 
 
 
+/**
+ * Created balanceTable which contains colume balance_amount to manage remaining balance for the user. The 0 gets being added 
+ * to the table as initial value for balance_amount as all POST requests to balanceTable updates the balance_amount instead 
+ * of adding new amount to the balanceTable. The query to add initial amount to the table has commentted out to save further 
+ * addition of 0 to the balanceTable.
+ */
 function createBalanceTable() {
   db.query(
     "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
@@ -268,28 +294,34 @@ function createBalanceTable() {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
-         
+         /** 
         db.query(
           "INSERT INTO balanceTable (balance_amount) VALUES (0.0)",
           (error, results) => {
             if (error) {
               console.log(error);
-            } else {
+            } 
+            else {
               console.log("Balance 0 added successfully");
             }
           }
-        );
+        );**/
       }
     }
   );
-
 }
 
+
+
+/**
+ * GET method to retrive current/updated remaining balance (balance_amount) from the table
+ */
 app.get('/addbalance', (request, response) => {
   db.query("SELECT balance_amount FROM balanceTable" , (error, results) => {
-      if (error) {
+      if (error){
           console.log(error);
-      }else {
+      }
+      else{
         response.json(results[0].balance_amount);
         console.log("Balance retrieved successfully");
       }
@@ -298,15 +330,23 @@ app.get('/addbalance', (request, response) => {
 
 
 
+
+/**
+ * Created incomeTable which contains colume income_amount to manage incomes for the user. The 0 gets being added 
+ * to the table as initial value for income_amount as all POST requests to incomeTable updates the income_amount instead 
+ * of adding new amount to the incomeTable. The query to add initial amount to the table has commentted out to save further 
+ * addition of 0 to the incomeTable.
+ */
 function createIncomeTable() {
   db.query(
     "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
-      } else {
+      } 
+      else{
         console.log("incomeTable created successfully");
-         
+         /** 
         db.query(
           "INSERT INTO incomeTable (income_amount) VALUES (0.0)",
           (error, results) => {
@@ -316,38 +356,52 @@ function createIncomeTable() {
               console.log("Income 0 added successfully");
             }
           }
-        );
+        );**/
       }
     }
   );
 
 }
 
-// Add to the income TablE
+
+
+
+/**
+ * POST method to update the balance_amount in the balanceTable as well as income_amount in the incomeTable.
+ * Following method add the new income of the user to the remaining balance as well as updates the  incomeTable
+ * by replacing the previous income_amount with the new income.
+ */
 app.post('/addincome', (request, response) => {
-  const balance  = request.body.income_amount;
-  db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}'`, (error, results) =>{
+   const balance  = request.body.income_amount;
+    db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}'`, (error, results) =>{
       if (error) {
           console.log(error);
-        }else {
+        }
+        else {
           console.log("Balance updated successfully into the table");
         }
-      });
-
-      db.query(`UPDATE incomeTable SET income_amount='${balance}'`, (error, results) =>{
+    });
+    db.query(`UPDATE incomeTable SET income_amount='${balance}'`, (error, results) =>{
         if (error) {
-            console.log(error);
-          }else {
-            console.log("Income updated successfully into the table");
-          }
-        });
+          console.log(error);
+        }
+        else{
+          console.log("Income updated successfully into the table");
+        }
+    });
 });
 
+
+
+/**
+ * GET method to retrieve income_amount from the incomeTable
+ */
 app.get('/addincome', (request, response) => {
   db.query("SELECT income_amount FROM incomeTable" , (error, results) => {
       if (error) {
           console.log(error);
-      }else {
+      }
+      else {
         response.json(results[0].income_amount);
         console.log("Balance retrieved successfully");
       }
@@ -357,10 +411,11 @@ app.get('/addincome', (request, response) => {
 
 
 
-
-
-
-//Create expense table
+/**
+ * Created spendingTable which contains columes catogory_name, expense_name, expense_amount, date and time to manage spendings for the user. 
+ * The few  initial spendings has been added to the spendingTable as a fake data in order to create graph.The queries to add initial data to the table have
+ * been  commentted out to save further addition of same data to the spendingTable.
+ */
 function createSpendingTable() {
   db.query(
     "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount DOUBLE(10,2) NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
@@ -368,7 +423,7 @@ function createSpendingTable() {
       if (error) {
         console.log(error);
       } else {
-         
+         /** 
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM']);
@@ -409,44 +464,53 @@ function createSpendingTable() {
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '10/26/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '10/26/2023', '11:02:59 AM']);
         
-        
+        **/
         console.log("spendingTable created successfully");
       }
     }
   );
 }
 
-// Add to the expense Table
 
+
+
+/**
+ * POST method to add new spending to the spendingTable. The following method updates the catogory_total in the catogoryTable as well
+ * as updates the balance_amount from balanceTable.
+ */
 app.post('/addspendings', (request, response) => {
-  const {catogory_name, expense_name, expense_amount, date, time}  = request.body;
-  db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[catogory_name, expense_name, expense_amount, date, time], (error, results) =>{
-      if (error) {
+    const {catogory_name, expense_name, expense_amount, date, time}  = request.body;
+    db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[catogory_name, expense_name, expense_amount, date, time], (error, results) =>{
+        if (error) {
           console.log(error);
         }
         else{
           console.log('spending added succesfully into the table')
         }
-      });
-
-      db.query(`UPDATE catogoryTable SET catogory_total=catogory_total+'${expense_amount}' WHERE catogory_name='${catogory_name}'` , (error, results) =>{
+    });
+    db.query(`UPDATE catogoryTable SET catogory_total=catogory_total+'${expense_amount}' WHERE catogory_name='${catogory_name}'` , (error, results) =>{
         if (error) {
             console.log(error);
-          }
-          else{
+        }
+        else{
             console.log('successfully added catogory into the table')
-          }
-        });
-
-        db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}'`, (error, results) =>{
-          if (error) {
-              console.log(error);
-            }else {
-              console.log("Balance updated successfully into the table");
-            }
-          });
+        }
+    });
+    db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}'`, (error, results) =>{
+        if (error) {
+            console.log(error);
+        }
+        else{
+            console.log("Balance updated successfully into the table");
+        }
+    });
 });
 
+
+
+/**
+ * GET method to retrieve all entries from the spendingTable catogorized by the date.
+ */
 app.get('/addspendings/date', (request, response) => {
   db.query("SELECT DISTINCT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date", (error, results) => {
       if (error) {
@@ -460,6 +524,11 @@ app.get('/addspendings/date', (request, response) => {
 });
 
 
+
+
+/**
+ *  GET method to retrieve all entries from the spendingTable in the same order they have been added to the spendingTable
+ */
 app.get('/addspendings', (request, response) => {
   db.query("SELECT * FROM spendingTable ORDER BY id ASC",(error, results) => {
       if (error) {
@@ -472,7 +541,7 @@ app.get('/addspendings', (request, response) => {
   });
 });
 
-
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 
 app.listen(PORT, () => {
