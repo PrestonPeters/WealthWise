@@ -26,7 +26,7 @@ function GraphWindow({ isWindowOpen, windowClose }) {
         /**
          * The following useEffect function retrieves the spending history from the database by considering date as 
          *  an aspect to categorize the history and selects the last 7 entries to show on the graph. Following function gets executed everytime webpage is loaded.
-         * It saves the dates in the variable 'vAxisDate' and saves the total spending amount for that date in the varible 'yAxisAmount'.
+         * It saves the dates in the variable 'xAxisDate' and saves the total spending amount for that date in the varible 'yAxisAmount'.
          */
         useEffect(()=>{
             const getUpdatedSpendingList= async()=>{
@@ -72,8 +72,8 @@ function GraphWindow({ isWindowOpen, windowClose }) {
                         <Modal.Body style={{maxWidth:'800px',maxHeight:'550px', overflowX:'auto'}}> 
                             <h2>Your Spending Graph</h2>
                             <BarChart
-                                xAxis={[{scaleType:'band',data:xAxisDate }]}
-                                series={[{data:yAxisAmount}]}
+                                xAxis={[{scaleType:'band',data:xAxisDate,label:'Date' }]}
+                                series={[{data:yAxisAmount, label:'Total Spending'}]}
                                 height={500}/>     
                         </Modal.Body>
                         <ModalFooter>
