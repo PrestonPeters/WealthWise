@@ -6,7 +6,7 @@ import { Button, Modal, ModalFooter, Table} from "react-bootstrap";
 
 /**
  * The following function create visual contents of the history window, which inclueds history table where user can observe
- * and analyse their past spendings. The history table has contains five columes- catogory name(in which catogory user have made spending) , 
+ * and analyse their past spendings. The history table has contains five columes- category name(in which category user have made spending) , 
  * spending description(little information about the spending), amount (the total amount spent), date and time. 
  * @param param0 - isWindowOpen is a state variable which informs the following function whether the button to open the history window
  * has clicked or not.
@@ -43,7 +43,7 @@ function HistoryWindow({isWindowOpen , windowClose}){
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>Catogory Name</th>
+                                <th>Category Name</th>
                                 <th>Description</th>
                                 <th>Amount</th>
                                 <th>Date</th>   
@@ -53,7 +53,7 @@ function HistoryWindow({isWindowOpen , windowClose}){
                         {spendingList.map((spendingElement)=>(
                             <tbody>   
                                 <tr>
-                                    <td>{spendingElement.catogory_name}</td>
+                                    <td>{spendingElement.category_name}</td>
                                     <td>{spendingElement.expense_name}</td>
                                     <td>{spendingElement.expense_amount}</td>
                                     <td>{spendingElement.date}</td>

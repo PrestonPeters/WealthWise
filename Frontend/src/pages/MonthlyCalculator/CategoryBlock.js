@@ -5,14 +5,14 @@ import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
 
 
 /**
- * the following function creates the template for the catogories. The templates allow user to add
- * new spending to the particular catogory as well as to see the total past spending amount for the catogory.
- * @param param0 - catogoryName is name of catogory assigned to particular the template
- * @param param1 - total_spending is the total past spending amount for the catogory. It can be 0 as user is 
- * allowed to add new catogories.
- * @returns It returns the visual contents of catogory templates.
+ * the following function creates the template for the categories. The templates allow user to add
+ * new spending to the particular category as well as to see the total past spending amount for the category.
+ * @param param0 - categoryName is name of category assigned to particular the template
+ * @param param1 - total_spending is the total past spending amount for the category. It can be 0 as user is 
+ * allowed to add new categories.
+ * @returns It returns the visual contents of category templates.
  */
-function CatogoryBlocks({catogoryName,total_spending}){
+function CategoryBlocks({categoryName,total_spending}){
         /**
          * variable to store state of the spending window
          */
@@ -24,12 +24,12 @@ function CatogoryBlocks({catogoryName,total_spending}){
          */
         const [inputDescription, setDescription]= useState('');
         const [inputSpending, setSpending]= useState('');
-        const [catogory] = useState(catogoryName);
+        const [category] = useState(categoryName);
 
 
         /**
          * The following functions opens the spending window which allow user to input their new spending
-         *  with information regarding the it such as catogory,spending description, amount, date and time.
+         *  with information regarding the it such as category,spending description, amount, date and time.
          */
         const spendingWindow=()=>{
             setSpendingWindowOpen(true)
@@ -48,7 +48,7 @@ function CatogoryBlocks({catogoryName,total_spending}){
 
         /**
          * the following function add the new spending information to the database, as well as updates the remaining balance and 
-         * total spending amount for particular catogory. After successful completion of above task it clears the input fields from 
+         * total spending amount for particular category. After successful completion of above task it clears the input fields from 
          * the spending window and closes it.
          * 
          */
@@ -62,10 +62,21 @@ function CatogoryBlocks({catogoryName,total_spending}){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({catogory_name:catogory,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString()}),
+                body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString()}),
             })
             .then((response)=>{
                 console.log(response);
+                /*
+                1. by expense_name, find the corresponding total_spending
+                    - if expense_name not exist in `                    
+                    <div className='cardsPanel'>
+                        {categoryList.map((categoryElement)=>(<categoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
+                    </div>`
+                    set total_spending to 0
+                
+                2. add the expense_amount to total_spending
+                3. updating the corresponding total_spending to the new amount on web page
+                */
             })
             .catch((error)=>{
                 console.log(error);
@@ -77,7 +88,7 @@ function CatogoryBlocks({catogoryName,total_spending}){
 
 
         /**
-         * The following code contains react boostrap components to create the template for each catogory as well as spending window form.
+         * The following code contains react boostrap components to create the template for each category as well as spending window form.
          */
         return(
             <Card className="mb-4" style={{width:'220px',alignItems:'center'}}>
@@ -86,17 +97,17 @@ function CatogoryBlocks({catogoryName,total_spending}){
                         <p>Total:</p>
                         <h2>${total_spending}</h2>
                     </Button>
-                    <p style={{fontWeight:'bold'}}>{catogoryName}</p>
+                    <p style={{fontWeight:'bold'}}>{categoryName}</p>
                     <Button onClick={spendingWindow} style={{width:'200px', alignContent:'center'}}>Add Spending</Button>
                     <Modal show={isSpendingWindowOpen} onHide={closeSpendingWindow} centered>
                         <Form>
                             <Modal.Header style={{fontWeight:'bold'}}> Add Your Spending  </Modal.Header>  
                             <Modal.Body>
-                                <Form.Label> Catogory </Form.Label>
+                                <Form.Label> Category </Form.Label>
                                 <Form.Control
                                     type="text"
                                     required
-                                    value={catogoryName}
+                                    value={categoryName}
                                     style={{backgroundColor:'#d1d7e0'}}/>
                                 <Form.Label> Description </Form.Label>  
                                 <Form.Control 
@@ -135,4 +146,4 @@ function CatogoryBlocks({catogoryName,total_spending}){
     )
 }
 
-export default CatogoryBlocks;
+export default CategoryBlocks;

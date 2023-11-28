@@ -3,10 +3,10 @@ import './MonthlyCalculator.css'
 import {Button,Container,Stack} from "react-bootstrap";
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CatogoryWindow from './CatogoryWindow';
+import CategoryWindow from './CategoryWindow';
 import GraphWindow from './GraphWindow';
 import HistoryWindow from './HistoryWindow';
-import CatogoryBlocks from './CatogoryBlock';
+import CategoryBlocks from './CategoryBlock';
 import RemainingBalance from './RemainingBalance';
  
 
@@ -19,7 +19,7 @@ function MonthlyCalculator(){
         /**
          * Variables to determine state of the componenets.
          */
-        const[isCatogoryWindowOpen, setCatogoryWindowOpen] = useState(false);
+        const[isCategoryWindowOpen, setCategoryWindowOpen] = useState(false);
         const[isGraphWindowOpen, setGraphWindowOpen] = useState(false);
         const[isHistroyWindowOpen, setHistoryWindowOpen] = useState(false);
         const[isBalanceWindowOpen, setBalanceWindowOpen] = useState(false);
@@ -28,22 +28,22 @@ function MonthlyCalculator(){
         /**
          * Variables to store data
          */
-        const[catogoryList, setCatogoryList] = useState([]);
+        const[categoryList, setCategoryList] = useState([]);
         const[remainingBalance, setRemainingBalance]= useState(0);
         const[lastIncome, setLastIncome]=useState(0);
 
 
         /**
-         *  Following functions retrieve all the catogories from the database to create catogory blocks for each catogory,
+         *  Following functions retrieve all the categories from the database to create category blocks for each category,
          *  everytime the webpage is loaded. 
          */
         useEffect(()=>{
-            const getUpdatedCatogoryList= async()=>{
-            const catogoryListResponse = await fetch('http://localhost:4000/addcatogories');
-            const updatedcatogoryList = await catogoryListResponse.json();
-            setCatogoryList(updatedcatogoryList);
+            const getUpdatedCategoryList= async()=>{
+            const categoryListResponse = await fetch('http://localhost:4000/addcategories');
+            const updatedCategoryList = await categoryListResponse.json();
+            setCategoryList(updatedCategoryList);
             }
-            getUpdatedCatogoryList();
+            getUpdatedCategoryList();
         },[]);
 
 
@@ -66,26 +66,26 @@ function MonthlyCalculator(){
     
 
         /**
-         *  The following function opens the catogory window where user can add or delete catogory.
+         *  The following function opens the category window where user can add or delete category.
          */
-        const openCatogoryWindow =()=>{
-            setCatogoryWindowOpen(true);
+        const openCategoryWindow =()=>{
+            setCategoryWindowOpen(true);
         }
 
 
         /**
-         *  Following functions closes the catogory window and retrieves all the catogories from the database to update the number of
-         *  catogory blocks on the webpage, as user are allowed to add and remove catogories from table.
+         *  Following functions closes the category window and retrieves all the categories from the database to update the number of
+         *  category blocks on the webpage, as user are allowed to add and remove categories from table.
          */
-        const closeCatogoryWindow =()=>{
-            setCatogoryWindowOpen(false);
-            const getUpdatedCatogoryList= async()=>{
-            const catogoryListResponse = await fetch('http://localhost:4000/addcatogories');
-            const updatedcatogoryList = await catogoryListResponse.json();
-            setCatogoryList(updatedcatogoryList);
+        const closeCategoryWindow =()=>{
+            setCategoryWindowOpen(false);
+            const getUpdatedCategoryList= async()=>{
+            const categoryListResponse = await fetch('http://localhost:4000/addcategories');
+            const updatedCategoryList = await categoryListResponse.json();
+            setCategoryList(updatedCategoryList);
             }
             setTimeout(()=>{
-                getUpdatedCatogoryList();
+                getUpdatedCategoryList();
             },0);
         }
         
@@ -158,8 +158,8 @@ function MonthlyCalculator(){
                 <Container style={{ alignItems:'center'}}>
                     <p className="expenseTitle"> Manage Your Spendings </p>          
                     <Stack direction='horizontal' gap={3}>
-                        <Button className='upperButtons' onClick={openCatogoryWindow}> Manage Catogories</Button>
-                        <CatogoryWindow isWindowOpen={isCatogoryWindowOpen} windowClose={closeCatogoryWindow}/>
+                        <Button className='upperButtons' onClick={openCategoryWindow}> Manage Categories</Button>
+                        <CategoryWindow isWindowOpen={isCategoryWindowOpen} windowClose={closeCategoryWindow}/>
                         <Button className='upperButtons' onClick={openGraphWindow}>Graphs</Button>
                         <GraphWindow isWindowOpen={isGraphWindowOpen} windowClose={closeGraphWindow} />
                         <Button className='upperButtons'onClick={openHistoryWindow}>History</Button>   
@@ -172,9 +172,9 @@ function MonthlyCalculator(){
                         </Button>
                         <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow}/>    
                     </Stack>
-                    <p> Add Your Spendings According To Catogories</p><br></br>
+                    <p> Add Your Spendings According To Categories</p><br></br>
                     <div className='cardsPanel'>
-                        {catogoryList.map((catogoryElement)=>(<CatogoryBlocks catogoryName={catogoryElement.catogory_name} total_spending={catogoryElement.catogory_total} /> ))}
+                        {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
                     </div>
                 </Container>
            </div>         
