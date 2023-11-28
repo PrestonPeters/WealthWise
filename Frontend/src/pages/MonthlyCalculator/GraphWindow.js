@@ -32,7 +32,7 @@ function GraphWindow({ isWindowOpen, windowClose }) {
             const getUpdatedSpendingList= async()=>{
                 const spendingListResponse = await fetch('http://localhost:4000/addspendings/date');
                 const updatedSpendingList = await spendingListResponse.json();
-                for(let i= updatedSpendingList.length-7;i<updatedSpendingList.length;i++){
+                for(let i= updatedSpendingList.length-1;i>=0;i--){
                     setXAxisDate((xAxisDate)=>[...xAxisDate,updatedSpendingList[i].date]);
                     setYAxisAmount((yAxisAmount)=>[...yAxisAmount,updatedSpendingList[i].total_spending]);
                 }
@@ -69,7 +69,7 @@ function GraphWindow({ isWindowOpen, windowClose }) {
                 <Tabs justify>
                     <Tab eventKey={"barGraph"} title="Bar Graph">
                         <Modal.Header style={{fontWeight:'bold'}}> Compare Your Spendings Through Bar Graph </Modal.Header>
-                        <Modal.Body style={{maxWidth:'800px',maxHeight:'600px', overflowX:'auto'}}> 
+                        <Modal.Body style={{maxWidth:'800px',maxHeight:'550px', overflowX:'auto'}}> 
                             <h2>Your Spending Graph</h2>
                             <BarChart
                                 xAxis={[{scaleType:'band',data:xAxisDate }]}
@@ -82,7 +82,7 @@ function GraphWindow({ isWindowOpen, windowClose }) {
                     </Tab>
                     <Tab eventKey={"pieChart"} title="Pie Chart">
                         <Modal.Header style={{fontWeight:'bold'}}> Compare Your Spendings Through Using Pie Chart </Modal.Header>
-                        <Modal.Body style={{maxWidth:'800px',maxHeight:'600px', overflowX:'auto'}}>
+                        <Modal.Body style={{maxWidth:'800px',maxHeight:'550px', overflowX:'auto'}}>
                             <h2>Your Spending Chart</h2>
                             <PieChart
                                 height={500}

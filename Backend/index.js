@@ -511,7 +511,7 @@ app.post('/addspendings', (request, response) => {
  * GET method to retrieve all entries from the spendingTable categorized by the date.
  */
 app.get('/addspendings/date', (request, response) => {
-  db.query(" SELECT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date ORDER BY STR_TO_DATE(date,'%m/%d/%Y')", (error, results) => {
+  db.query("SELECT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date ORDER BY STR_TO_DATE(date,'%m/%d/%Y') DESC LIMIT 7", (error, results) => {
       if (error) {
           console.log(error);
       }
