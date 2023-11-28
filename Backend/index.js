@@ -191,18 +191,18 @@ app.get('/transactions/:userId', (req, res) => {
 // Create catogory table
 function createCatogoryTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL,catogory_total INT NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS catogoryTable (id INT NOT NULL AUTO_INCREMENT,catogory_name VARCHAR(100) NOT NULL,catogory_total DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
-        /** 
+        
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Monthly Grocery',610]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Rent',600]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Gym',696]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Medicine',365]);
         db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['Vehicle',678]);
-        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['School',576]) **/
+        db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",['School',576]) 
         console.log("catogoryTable created successfully");
       }
     }
@@ -213,7 +213,7 @@ function createCatogoryTable() {
 
 app.post('/addcatogories', (request, response) => {
   const category  = request.body.catogory_name;
-  db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",[category,0], (error, results) =>{
+  db.query("INSERT INTO catogoryTable (catogory_name,catogory_total) VALUES (?,?)",[category,0.0], (error, results) =>{
       if (error) {
           console.log(error);
         }
@@ -262,15 +262,15 @@ app.get('/addcatogories', (request, response) => {
 
 function createBalanceTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount INT NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
-        /** 
+         
         db.query(
-          "INSERT INTO balanceTable (balance_amount) VALUES (0)",
+          "INSERT INTO balanceTable (balance_amount) VALUES (0.0)",
           (error, results) => {
             if (error) {
               console.log(error);
@@ -278,7 +278,7 @@ function createBalanceTable() {
               console.log("Balance 0 added successfully");
             }
           }
-        );**/
+        );
       }
     }
   );
@@ -300,15 +300,15 @@ app.get('/addbalance', (request, response) => {
 
 function createIncomeTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount INT NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
         console.log("incomeTable created successfully");
-        /** 
+         
         db.query(
-          "INSERT INTO incomeTable (income_amount) VALUES (0)",
+          "INSERT INTO incomeTable (income_amount) VALUES (0.0)",
           (error, results) => {
             if (error) {
               console.log(error);
@@ -316,7 +316,7 @@ function createIncomeTable() {
               console.log("Income 0 added successfully");
             }
           }
-        );**/
+        );
       }
     }
   );
@@ -363,12 +363,12 @@ app.get('/addincome', (request, response) => {
 //Create expense table
 function createSpendingTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount INT NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, catogory_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount DOUBLE(10,2) NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
-        /** 
+         
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM']);
@@ -408,7 +408,7 @@ function createSpendingTable() {
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '10/26/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '10/26/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (catogory_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '10/26/2023', '11:02:59 AM']);
-        **/
+        
         
         console.log("spendingTable created successfully");
       }
@@ -448,12 +448,12 @@ app.post('/addspendings', (request, response) => {
 });
 
 app.get('/addspendings/date', (request, response) => {
-  const date = request.query.date;
-  db.query("SELECT * FROM spendingTable WHERE date = ?", [date], (error, results) => {
+  db.query("SELECT DISTINCT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date", (error, results) => {
       if (error) {
           console.log(error);
       }
       else{
+        response.json(results);
         console.log('All spendings with given date are retrived successfully');
       }
   });

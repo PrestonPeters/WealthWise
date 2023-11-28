@@ -3,17 +3,22 @@ import { Button, Card, Form, Modal, Stack, ModalFooter } from "react-bootstrap";
 
 function RemainingBalance({isWindowOpen ,windowClose}){
     const [inputIncome, setIncome]= useState('');
+    const closeIncomeWindow=()=>{
+        setIncome('');
+        windowClose();
+    }
+
     const saveIncome =()=>{
-        if(inputIncome.length===0 || inputIncome<=0 || isNaN(inputIncome)){
+        if(inputIncome.length===0 || inputIncome<=0 || isNaN(inputIncome) ){
            alert('Please Input Valid amount ');
             return;
         } 
-        fetch('http://localhost:4000/addbalance', {
+        fetch('http://localhost:4000/addincome', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({balance_amount: inputIncome}),
+            body: JSON.stringify({income_amount: inputIncome}),
         })
         .then((response)=>{
             console.log(response);
@@ -42,14 +47,14 @@ function RemainingBalance({isWindowOpen ,windowClose}){
                                 type="number"
                                 required 
                                 value={inputIncome}
-                                placeholder="i.e $7000"
+                                placeholder="i.e $7000.00"
                                 onChange={(income)=>setIncome(income.target.value)}/>
                         </Form>
                     </Modal.Body>
                     <ModalFooter>
                     <Stack direction="horizontal" gap={2}>
                         <Button onClick={saveIncome}>Save</Button>
-                        <Button onClick={windowClose}>Cancel</Button>
+                        <Button onClick={closeIncomeWindow}>Cancel</Button>
                         </Stack>
                     </ModalFooter>
                 </Form>

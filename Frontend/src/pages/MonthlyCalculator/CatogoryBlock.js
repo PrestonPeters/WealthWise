@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
 
-function CatogoryBlocks({catogoryName,total_spending}){
+function CatogoryBlocks({catogoryName,total_spending,update}){
     const [isSpendingWindowOpen, setSpendingWindowOpen] = useState(false);
     const spendingWindow=()=>{
         setSpendingWindowOpen(true)
     }
     const closeSpendingWindow=()=>{
+        setDescription('');
+        setSpending('');
         setSpendingWindowOpen(false);
     }
 
@@ -28,6 +30,7 @@ function CatogoryBlocks({catogoryName,total_spending}){
             body: JSON.stringify({catogory_name:catogory,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString()}),
         })
         .then((response)=>{
+            update();
             console.log(response);
         })
         .catch((error)=>{
@@ -86,7 +89,7 @@ function CatogoryBlocks({catogoryName,total_spending}){
                                 type="number"
                                 required
                                 value={inputSpending} 
-                                placeholder="i.e $100"
+                                placeholder="i.e $100.00"
                                 onChange={(amount)=>setSpending(amount.target.value)}/>
                             <Form.Label>
                                 Date
