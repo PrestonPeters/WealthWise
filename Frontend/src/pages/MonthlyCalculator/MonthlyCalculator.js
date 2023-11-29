@@ -225,7 +225,6 @@ function MonthlyCalculator({username}){
                         {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} username={username} refresh={refresh}/> ))}
                     </div>
                 </Container>
-                {username === '' && <div className="LoginMessageContainer"><div className="LoginMessage">Please Login or Register to use this feature!</div></div>}
             </div>         
         )
 }
