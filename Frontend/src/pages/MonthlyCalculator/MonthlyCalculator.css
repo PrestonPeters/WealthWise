@@ -1,11 +1,12 @@
-
+.monthlyCalculatorPage{
+    margin-top: 25vh;
+}
 
 
 .upperButtons{
     border-color: black;
     background-color: white;
-    margin-top: 3%;
-    margin-left: 3%;
+    margin-bottom: 3%;
     height: 13vh;
     width: 40vh;
 }
@@ -13,14 +14,24 @@
 .expenseTitle{
     font-size: 50px;
     font-weight: bold;
-   
-    margin-top: 2.7%;
-    margin-bottom: 2.5%;
+    margin-top: -3%;
+    margin-bottom: 2%;
 }
-.infoExpense{
-  
+
+
+.remainingBalance{
     margin-left: 3%;
-    margin-top: -1.5%;
+    position: absolute;
+    width: 40vh;
+    height: 100vh;
+    background: white;
+}
+
+
+.cardsPanel{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    
 }
 
 
