@@ -38,31 +38,12 @@ function MonthlyCalculator({username}){
          *  Following functions retrieve all the categories from the database to create category blocks for each category,
          *  everytime the webpage is loaded. 
          */
-
-        useEffect(()=>{
-            if (username === '') return;
-            fetch('http://localhost:4000/getcategories', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({username:username}),
-                })
-
-                .then((response)=>{
-                    if (response.status !== 500) return response.json();
-                    else return [];
-                })
-
-                .then((data)=>{setCategoryList(data);})
-                .catch((error)=>{console.log(error);});
-        }, [fetchAgain, username]);
-
         /**
          * The following function retrives the value of remaining balance from the database everytime webpage is loaded.
          */
     
         useEffect(()=>{
+            console.log("Fetching balance...");
             if (username === '') return;
             fetch('http://localhost:4000/getbalance', {
                     method: 'POST',
@@ -73,13 +54,17 @@ function MonthlyCalculator({username}){
                 })
 
                 .then((response)=>{
+                    console.log("Got response for balance.");
                     if (response.status !== 500) return response.json();
                     else return [];
                 })
 
                 .then((data)=>{setRemainingBalance(data);})
                 .catch((error)=>{console.log(error);});
+            }, [fetchAgain, username]);
 
+        useEffect(()=>{
+            console.log("Fetching income...");
             fetch('http://localhost:4000/getincome', {
                     method: 'POST',
                     headers: {
@@ -88,28 +73,16 @@ function MonthlyCalculator({username}){
                     body: JSON.stringify({username:username}),
                 })
 
-                .then((response)=>{return response.json();})
+                .then((response)=>{
+                    console.log("Got response for income.");
+                    return response.json();
+                })
                 .then((data)=>{setLastIncome(data);})
-                .catch((error)=>{console.log(error);
-            });
-        
-        }, [fetchAgain, username]);
+                .catch((error)=>{console.log(error);});
+            }, [fetchAgain, username]);
 
-        /**
-         *  The following function opens the category window where user can add or delete category.
-         */
-        const openCategoryWindow =()=>{
-            setCategoryWindowOpen(true);
-        }
-
-
-        /**
-         *  Following functions closes the category window and retrieves all the categories from the database to update the number of
-         *  category blocks on the webpage, as user are allowed to add and remove categories from table.
-         */
-        const closeCategoryWindow =()=>{
-            setCategoryWindowOpen(false);
-            if (username === '') return;
+        useEffect(()=>{
+            console.log("Fetching categories...");
             fetch('http://localhost:4000/getcategories', {
                     method: 'POST',
                     headers: {
@@ -119,12 +92,34 @@ function MonthlyCalculator({username}){
                 })
 
                 .then((response)=>{
+                    console.log("Got response for categories.");
                     if (response.status !== 500) return response.json();
                     else return [];
                 })
 
-                .then((data)=>{setCategoryList(data);})
+                .then((data)=>{
+                    console.log(data);
+                    setCategoryList(data);
+                })
                 .catch((error)=>{console.log(error);});
+        }, [fetchAgain, username]);
+
+        /**
+         *  The following function opens the category window where user can add or delete category.
+         */
+        const openCategoryWindow =()=>{
+            setFetchAgain(!fetchAgain);
+            setCategoryWindowOpen(true);
+        }
+
+
+        /**
+         *  Following functions closes the category window and retrieves all the categories from the database to update the number of
+         *  category blocks on the webpage, as user are allowed to add and remove categories from table.
+         */
+        const closeCategoryWindow =()=>{
+            setFetchAgain(!fetchAgain);
+            setCategoryWindowOpen(false);
         }
         
 
@@ -164,6 +159,7 @@ function MonthlyCalculator({username}){
         *   Following functions opens the balance window where user can input their income or deposite amount
         */
         const openBalanceyWindow =()=>{
+            setFetchAgain(!fetchAgain);
             setBalanceWindowOpen(true);  
         }
 
@@ -172,26 +168,9 @@ function MonthlyCalculator({username}){
          * Following function closes the balance window and update the value of remaining balance.
          */
         const closeBalanceWindow =()=>{
+            setFetchAgain(!fetchAgain);
             setBalanceWindowOpen(false);
-            if (username === '') return;
-            fetch('http://localhost:4000/getbalance', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({username:username}),
-                })
-
-                .then((response)=>{
-                    if (response.status !== 500) return response.json();
-                    else return [];
-                })
-
-                .then((data)=>{setRemainingBalance(data);})
-                .catch((error)=>{console.log(error);});
         }
-
-        const refresh = () => {setFetchAgain(!fetchAgain);}
 
         /**
          * The following code contains react boostrap componenets to create visual contents of the webpage. It uses condition statement 
@@ -207,22 +186,22 @@ function MonthlyCalculator({username}){
                     <p className="expenseTitle"> Manage Your Spendings </p>          
                     <Stack direction='horizontal' gap={3}>
                         <Button className='upperButtons' onClick={openCategoryWindow}> Manage Categories</Button>
-                        <CategoryWindow isWindowOpen={isCategoryWindowOpen} windowClose={closeCategoryWindow} username={username} refresh={refresh}/>
+                        <CategoryWindow isWindowOpen={isCategoryWindowOpen} windowClose={closeCategoryWindow} username={username}/>
                         <Button className='upperButtons' onClick={openGraphWindow}>Graphs</Button>
                         <GraphWindow isWindowOpen={isGraphWindowOpen} windowClose={closeGraphWindow} username={username}/>
                         <Button className='upperButtons'onClick={openHistoryWindow}>History</Button>   
-                        <HistoryWindow isWindowOpen={isHistroyWindowOpen} windowClose={closeHistoryWindow} username={username} refresh={refresh}/>
+                        <HistoryWindow isWindowOpen={isHistroyWindowOpen} windowClose={closeHistoryWindow} username={username}/>
                         <Button className='upperButtons' onClick={openBalanceyWindow}style={{color:'black',  
-                            backgroundColor:(remainingBalance==0)?'red':
+                            backgroundColor:(remainingBalance===0)?'red':
                             ((lastIncome/2)<=remainingBalance)?'#38cf17':
                             ((lastIncome/2)>remainingBalance && (lastIncome/4)<=remainingBalance )?'#fcf403':'red'}}>
                                 Remaining Balance: <h1>${remainingBalance}</h1> 
                         </Button>
-                        <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow} username={username} refresh={refresh}/>    
+                        <RemainingBalance isWindowOpen={isBalanceWindowOpen} windowClose={closeBalanceWindow} username={username}/>    
                     </Stack>
                     <p> Add Your Spendings According To Categories</p><br></br>
                     <div className='cardsPanel'>
-                        {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} username={username} refresh={refresh}/> ))}
+                        {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} username={username}/> ))}
                     </div>
                 </Container>
             </div>         

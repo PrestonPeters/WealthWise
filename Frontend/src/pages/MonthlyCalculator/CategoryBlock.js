@@ -12,7 +12,7 @@ import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
  * allowed to add new categories.
  * @returns It returns the visual contents of category templates.
  */
-function CategoryBlocks({categoryName,total_spending, username, refresh}){
+function CategoryBlocks({categoryName,total_spending, username}){
         /**
          * variable to store state of the spending window
          */
@@ -52,40 +52,41 @@ function CategoryBlocks({categoryName,total_spending, username, refresh}){
          * the spending window and closes it.
          * 
          */
-        const addSpending = () => {
+        const addSpending = async () => {
             console.log("HERE NOW");
             if(inputSpending.length===0 || inputSpending <=0 || isNaN(inputSpending)){
                 alert('Please Input Complete and valid Information');
                 return;
             }
-            fetch('http://localhost:4000/addspendings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString(), username:username}),
-            })
-            .then((response)=>{
-                console.log(response);
-                /*
-                1. by expense_name, find the corresponding total_spending
-                    - if expense_name not exist in `                    
-                    <div className='cardsPanel'>
-                        {categoryList.map((categoryElement)=>(<categoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
-                    </div>`
-                    set total_spending to 0
-                
-                2. add the expense_amount to total_spending
-                3. updating the corresponding total_spending to the new amount on web page
-                */
-            })
-            .catch((error)=>{
+            try {
+                await fetch('http://localhost:4000/addspendings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString(), username:username}),
+                })
+                .then((response)=>{
+                    console.log(response);
+                    /*
+                    1. by expense_name, find the corresponding total_spending
+                        - if expense_name not exist in `                    
+                        <div className='cardsPanel'>
+                            {categoryList.map((categoryElement)=>(<categoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
+                        </div>`
+                        set total_spending to 0
+                    
+                    2. add the expense_amount to total_spending
+                    3. updating the corresponding total_spending to the new amount on web page
+                    */
+                    setDescription('');
+                    setSpending('');
+                    closeSpendingWindow();
+                });
+            } 
+            catch (error) {
                 console.log(error);
-            })
-            refresh();
-            setDescription('');
-            setSpending('');
-            closeSpendingWindow();
+            }
         } 
 
 

@@ -179,14 +179,15 @@ function createCategoryTable() {
       if (error) {
         console.log(error);
       } else {
-        /** 
+        /**
         db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Monthly Grocery',610, 'Test']);
         db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Rent',600, 'Test']);
         db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Gym',696, 'Test']);
         db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Medicine',365, 'Test']);
         db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Vehicle',678, 'Test']);
-        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['School',576, 'Test']); **/
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['School',576, 'Test']); 
         console.log("categoryTable created successfully");
+        */
       }
     }
   );
@@ -203,9 +204,11 @@ app.post('/addcategories', (request, response) => {
   db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",[category,0.0, username], (error, results) =>{
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else{
           console.log('successfully added category into the table')
+          response.status(200).json([]);
       }
     });
 });
@@ -224,15 +227,17 @@ app.post('/addcategories/delete', (request, response) => {
             console.log(error);
         }
         else{
-            console.log('successfully deleted category from the table')
+            console.log('successfully deleted category from the table');
         }
     });
     db.query(`DELETE FROM spendingTable WHERE category_name='${category}' AND username='${username}'`, (error, results) =>{
         if (error) {
             console.log(error);
+            response.status(500).json([]);
         }
         else{
-            console.log('successfully deleted category from the table')
+            console.log('successfully deleted category from the table');
+            response.status(200).json(results);
         }
     });     
 });
@@ -244,6 +249,8 @@ app.post('/addcategories/delete', (request, response) => {
  */
 app.post('/getcategories', (request, response) => {
   const username = request.body.username;
+  console.log("Getting categories");
+  console.log(username);
   db.query(`SELECT category_name,category_total FROM categoryTable WHERE username='${username}'`, (error, results) => {
       if (error) {
           console.log(error);
@@ -272,7 +279,7 @@ function createBalanceTable() {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
-        /** 
+        /**
         db.query(
           "INSERT INTO balanceTable (balance_amount,username) VALUES (0.0, 'Test')",
           (error, results) => {
@@ -283,7 +290,8 @@ function createBalanceTable() {
               console.log("Balance 0 added successfully");
             }
           }
-        );**/
+        );
+        */
       }
     }
   );
@@ -295,6 +303,7 @@ function createBalanceTable() {
  * POST method to retrive current/updated remaining balance (balance_amount) from the table
  */
 app.post('/getbalance', (request, response) => {
+  console.log("Getting balance...");
   const username = request.body.username;
   db.query(`SELECT balance_amount FROM balanceTable WHERE username='${username}'` , (error, results) => {
       if (error){
@@ -332,7 +341,7 @@ async function createIncomeTable() {
       } 
       else{
         console.log("incomeTable created successfully");
-         /** 
+        /**
         db.query(
           "INSERT INTO incomeTable (income_amount,username) VALUES (0.0, 'Test')",
           (error, results) => {
@@ -342,7 +351,8 @@ async function createIncomeTable() {
               console.log("Income 0 added successfully");
             }
           }
-        );**/
+        );
+        */
       }
     }
   );
@@ -364,14 +374,24 @@ app.post('/addincome', (request, response) => {
   db.query("SELECT * FROM incomeTable WHERE username = ?", [username], async (err, results) => {
       if (err) {console.log(err);}
       else if (results.length === 0) await addIncome(username);
-      console.log(balance, username);
       db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}' WHERE username='${username}'`, (error, results) =>{
-        if (error) console.log(error);
-          else console.log("Balance updated successfully into the table");
-      });
-      db.query(`UPDATE incomeTable SET income_amount='${balance}' WHERE username='${username}'`, (error, results) =>{
-          if (error) console.log(error);
-          else console.log("Income updated successfully into the table");
+        if (error) {
+          console.log(error);
+          response.status(500).json([]);
+        }
+        else {
+          console.log("Balance updated successfully into the table");
+          db.query(`UPDATE incomeTable SET income_amount='${balance}' WHERE username='${username}'`, (error, results) =>{
+            if (error) {
+              console.log(error);
+              response.status(500).json([]);
+            }
+            else {
+              console.log("Income updated successfully into the table");
+              response.status(200).json([]);
+            }
+        });
+        }
       });
     });
   });
@@ -404,20 +424,22 @@ async function addIncome(username) {
  * POST method to retrieve income_amount from the incomeTable
  */
 app.post('/getincome', (request, response) => {
+  console.log("Getting income...")
   const username = request.body.username;
   db.query(`SELECT income_amount FROM incomeTable WHERE username='${username}'` , (error, results) => {
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else {
         if (results[0]) {
-          response.status(200).json(results[0].income_amount);
           console.log("Income retrieved successfully");
+          response.status(200).json(results[0].income_amount);
         }
 
         else {
-          response.status(200).json(0);
           console.log("Income retrieved successfully");
+          response.status(200).json(0);
         }
       }
   });
@@ -438,7 +460,8 @@ function createSpendingTable() {
       if (error) {
         console.log(error);
       } else {
-        /** 
+         
+        /**
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM', 'Test']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM', 'Test']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM', 'Test']);
@@ -478,7 +501,7 @@ function createSpendingTable() {
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '11/26/2023', '11:02:59 AM', 'Test']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Pharmacy',20, '11/26/2023', '11:02:59 AM', 'Test']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'CardSheet Papers',45, '11/26/2023', '11:02:59 AM', 'Test']);
-        **/
+        */
         console.log("spendingTable created successfully");
       }
     }
@@ -494,29 +517,32 @@ function createSpendingTable() {
  */
 app.post('/addspendings', (request, response) => {
     const {category_name, expense_name, expense_amount, date, time, username}  = request.body;
-    console.log(category_name, expense_name, expense_amount, date, time, username);
     db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",[category_name, expense_name, expense_amount,date, time, username], (error, results) =>{
         if (error) {
           console.log(error);
+          response.status(500).json([]);
         }
         else{
-          console.log('spending added succesfully into the table')
-        }
-    });
-    db.query(`UPDATE categoryTable SET category_total=category_total+'${expense_amount}' WHERE category_name='${category_name}' AND username='${username}'` , (error, results) =>{
-        if (error) {
-            console.log(error);
-        }
-        else{
-            console.log('successfully added category into the table')
-        }
-    });
-    db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}' WHERE username='${username}'`, (error, results) =>{
-        if (error) {
-            console.log(error);
-        }
-        else{
-            console.log("Balance updated successfully into the table");
+          console.log('spending added succesfully into the table');
+          db.query(`UPDATE categoryTable SET category_total=category_total+'${expense_amount}' WHERE category_name='${category_name}' AND username='${username}'` , (error, results) =>{
+            if (error) {
+                console.log(error);
+                response.status(500).json([]);
+            }
+            else{
+                console.log('successfully added category into the table')
+                db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}' WHERE username='${username}'`, (error, results) =>{
+                  if (error) {
+                      console.log(error);
+                      response.status(500).json([]);
+                  }
+                  else{
+                      console.log("Balance updated successfully into the table");
+                      response.status(200).json([]);
+                  }
+              });
+            }
+        });
         }
     });
 });
@@ -534,8 +560,15 @@ app.post('/getspendings/date', (request, response) => {
           response.status(500).json([]);
       }
       else{
-        response.status(200).json(results);
-        console.log('All spendings with given date are retrived successfully');
+        if (results[0]) {
+          console.log('All spendings with given date are retrived successfully');
+          response.status(200).json(results);
+        }
+
+        else {
+          console.log('All spendings with given date are retrived successfully');
+          response.status(200).json([]);
+        }
       }
   });
 });
@@ -554,8 +587,16 @@ app.post('/getspendings', (request, response) => {
           response.status(500).send('Error retrieving transactions');
       }
       else{
-        response.status(200).json(results);
-        console.log('All spendings are retrived successfully');
+        if (results[0]) {
+          response.status(200).json(results);
+          console.log('All spendings are retrived successfully');
+        }
+
+        else {
+          response.status(200).json([]);
+          console.log('All spendings are retrived successfully');
+        
+        }
       }
   });
 });
