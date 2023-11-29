@@ -12,17 +12,17 @@ import { Button, Form, Modal, Stack, ModalFooter } from "react-bootstrap";
  * @param param1 - windowClose is a callback function which closes the remaining balance window.
  * @returns It returns the visual contents of the remaining balance window which contains Form.
  */
-function RemainingBalance({isWindowOpen ,windowClose}){
+function RemainingBalance({isWindowOpen ,windowClose, username, refresh}){
         /**
          * Variable to store the input income
          */
         const [inputIncome, setIncome]= useState(0);
         
-
         /**
          * The following clears the input box and closes the remaining balance window
          */
         const closeIncomeWindow=()=>{
+            refresh();
             setIncome('');
             windowClose();
         }
@@ -43,7 +43,7 @@ function RemainingBalance({isWindowOpen ,windowClose}){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({income_amount: inputIncome}),
+                body: JSON.stringify({income_amount: inputIncome, username:username}),
             })
             .then((response)=>{  
                 console.log(response);
@@ -51,6 +51,7 @@ function RemainingBalance({isWindowOpen ,windowClose}){
             .catch((error)=>{
                 console.log(error);
             })
+            refresh();
             setIncome('');
             windowClose();
         }

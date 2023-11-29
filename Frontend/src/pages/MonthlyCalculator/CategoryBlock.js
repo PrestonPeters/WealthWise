@@ -12,7 +12,7 @@ import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
  * allowed to add new categories.
  * @returns It returns the visual contents of category templates.
  */
-function CategoryBlocks({categoryName,total_spending}){
+function CategoryBlocks({categoryName,total_spending, username, refresh}){
         /**
          * variable to store state of the spending window
          */
@@ -52,7 +52,8 @@ function CategoryBlocks({categoryName,total_spending}){
          * the spending window and closes it.
          * 
          */
-        const addSpending=()=>{
+        const addSpending = () => {
+            console.log("HERE NOW");
             if(inputSpending.length===0 || inputSpending <=0 || isNaN(inputSpending)){
                 alert('Please Input Complete and valid Information');
                 return;
@@ -62,7 +63,7 @@ function CategoryBlocks({categoryName,total_spending}){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString()}),
+                body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString(), username:username}),
             })
             .then((response)=>{
                 console.log(response);
@@ -81,6 +82,7 @@ function CategoryBlocks({categoryName,total_spending}){
             .catch((error)=>{
                 console.log(error);
             })
+            refresh();
             setDescription('');
             setSpending('');
             closeSpendingWindow();

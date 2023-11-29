@@ -12,7 +12,7 @@ import { useState } from "react";
  * @param param1 - windowClose is a callback function which closes the manage category window.
  * @returns It returns the visual contents of the manage category  window which contains Form.
  */
-function CategoryWindow({isWindowOpen ,windowClose}){
+function CategoryWindow({isWindowOpen ,windowClose, username, refresh}){
         /**
          * Variables to store the data
          */
@@ -24,6 +24,7 @@ function CategoryWindow({isWindowOpen ,windowClose}){
          * The following clears the input boxes and closes the manage category window
          */
         const closeCategoryWindow=()=>{
+            refresh();
             setdeleteCategoryName('');
             setCategoryName('');
             windowClose(); 
@@ -44,7 +45,7 @@ function CategoryWindow({isWindowOpen ,windowClose}){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({category_name:inputCategoryName}),
+                body: JSON.stringify({category_name:inputCategoryName, username:username}),
             })
             .then((response)=>{
                 console.log(response);
@@ -52,6 +53,7 @@ function CategoryWindow({isWindowOpen ,windowClose}){
             .catch((error)=>{
                 console.log(error);
             })
+            refresh();
             setCategoryName('');
             windowClose(); 
         }
@@ -72,7 +74,7 @@ function CategoryWindow({isWindowOpen ,windowClose}){
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({category_name:deleteCategoryName}),
+                body: JSON.stringify({category_name:deleteCategoryName, username:username}),
             })
             .then((response)=>{
                 console.log(response);
@@ -80,8 +82,9 @@ function CategoryWindow({isWindowOpen ,windowClose}){
             .catch((error)=>{
                 console.log(error);
             })
+            refresh();
             setdeleteCategoryName('');
-            windowClose(); 
+            windowClose();
         }
 
 

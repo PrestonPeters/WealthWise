@@ -13,7 +13,7 @@ import { Button, Modal, ModalFooter, Table} from "react-bootstrap";
  * @param param1 - windowClose is a callback function which closes the history window.
  * @returns - It retuen the history table of user's spendings.
  */
-function HistoryWindow({isWindowOpen , windowClose}){
+function HistoryWindow({isWindowOpen , windowClose, username, refresh}){
         /**
          * Varible to store all spending history retrived from the database.
          */
@@ -23,13 +23,27 @@ function HistoryWindow({isWindowOpen , windowClose}){
          * Thw useEffect function retrives all the spending entries from databse everytime webpage is loaded and
          *  saves the data in the varible 'spendingList'
          */
+
         useEffect(()=>{
-            const getSpendingList= async()=>{
-                const spendingListResponse = await fetch('http://localhost:4000/addspendings');
-                const updatedSpendingList = await spendingListResponse.json();
-                setSpendingList(updatedSpendingList);
-            }
-            getSpendingList();
+            fetch('http://localhost:4000/getspendings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username: username}),
+            })
+
+            .then((response)=>{
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                    return [];
+                }
+                return response.json();
+            })
+
+            .then((data)=>{
+                setSpendingList(data);
+            });
         },[]);
 
         /**
