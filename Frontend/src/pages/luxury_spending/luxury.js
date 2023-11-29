@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import "./luxury.css";
 
+const PROVINCES_TAX_RATES = {
+  Alberta: 5,
+  BritishColumbia: 12,
+  Manitoba: 12,
+  NewBrunswick: 15,
+  NewfoundlandAndLabrador: 15,
+  NorthwestTerritories: 5,
+  NovaScotia: 15,
+  Ontario: 13,
+  PrinceEdwardIsland: 15,
+  Quebec: 14.98,
+  Saskatchewan: 11,
+  Yukon: 5,
+};
+
 function Luxury() {
   // State variables to store user inputs and calculated values
   const [itemPrice, setItemPrice] = useState("");
@@ -13,13 +28,15 @@ function Luxury() {
   const [affordabilityPlan, setAffordabilityPlan] = useState("very-comfortable");
   const [monthsToSave, setMonthsToSave] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [province, setProvince] = useState('Alberta');
 
   const calculateTotalSpending = () => {
     // Tax rate constant
-    const taxRate = 0.11;
+    const taxRate = PROVINCES_TAX_RATES[province] / 100;
 
     // Input validation: Check if any input is zero or negative
-    if (itemPrice <= 0 || timePeriod <= 0 || monthlyIncome <= 0) {
+    if (itemPrice <= 0 || timePeriod <= 0 || monthlyIncome <= 0
+        || !itemPrice || !timePeriod || !monthlyIncome) {
       setErrorMessage("Please enter values higher than 0 for all inputs.");
       return;
     } else {
@@ -123,6 +140,16 @@ function Luxury() {
             <option value="comfortable">Comfortable</option>
             <option value="asap">As Soon As Possible</option>
           </select>
+          <label>
+          Province:
+          <select value={province} onChange={(e) => setProvince(e.target.value)}>
+            {Object.keys(PROVINCES_TAX_RATES).map((p) => (
+              <option key={p} value={p}>
+                {p.replace(/([A-Z])/g, ' $1').trim()}
+              </option>
+            ))}
+          </select>
+        </label>
         </div>
 
         {/* Display calculated values if total spending is greater than 0 */}

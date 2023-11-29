@@ -1,21 +1,15 @@
 import React from "react";
 import './nav.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Nav({ isLoggedIn, username, onLogout }) {
-    const nav = useNavigate();
-
     return (
         <nav className="navigation">
             {/* Top row for brand and auth links */}
             <div className="top-row">
                 <span className="navigation-brand">WealthWise</span>
                 <div className="auth-links">
-                {isLoggedIn && <button className="navigation-item navigation-link auth special" onClick={(e) => {
-                    e.preventDefault();
-                    nav('/');
-                    onLogout();
-                }}>Logout</button>}
+                {isLoggedIn && <button className="navigation-item navigation-link auth special" onClick={onLogout}>Logout</button>}
                 {!isLoggedIn && <Link to='/login' className="navigation-item navigation-link auth">Login</Link>}
                 {!isLoggedIn && <Link to='/registration' className="navigation-item navigation-link auth special">Join us</Link>}
                 {isLoggedIn && <span className="navigation-item navigation-link auth">Hello, {username}</span>}

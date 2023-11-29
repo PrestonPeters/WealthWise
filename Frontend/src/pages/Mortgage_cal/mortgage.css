@@ -1,94 +1,109 @@
 /* mortgage.css */
-
 .page-scroller {
     padding: 2.5%;
-    margin-top: 17vh;
+    margin-top: 17vh; /* Adjust as needed to account for navbar height */
     display: flex;
     flex-direction: column;
-    align-items: left;
-    justify-content: left;
+    align-items: center; /* Align to center for horizontal alignment */
+    justify-content: center; /* Center vertically if needed */
     height: auto;
-    min-width: 1000px;
+    min-width: 300px; /* For better responsiveness */
     width: 90%;
     max-width: 100%;
-    font-family: Montserrat;
-}
+    font-family: 'Montserrat', sans-serif;
+    background: #031930; /* Assuming you have a dark theme */
+
+  }
   
-.mortgage-calculator {
+  .mortgage-calculator {
     max-width: 600px;
-    margin: auto;
+    width: 100%; /* Ensures it takes the full width of its container */
+    margin: 0 auto; /* Centering in all directions */
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Ensures that labels, inputs, and button are aligned */
     justify-content: center;
     padding: 20px;
-}
-
-.MortgageCalculatorPage h1 {
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.MortgageCalculatorPage label {
-    text-align: center;
-    height: auto;
-    font-size: auto;
-    width: auto;
-    font-weight: bold;
-}
-
-.MortgageCalculatorPage input, .MortgageCalculatorPage select {
-    height: calc(10px + 2vmin);
-    font-size: calc(10px + 1vmin);
-    width: auto;
-    border-radius: 3px;
-    margin-right: 10px;
-}
-
-.MortgageCalculatorPage select:hover {
-    background-color: #e1e1e1;
-}
-
-.MortgageCalculatorPage button {
-    height: auto;
-    font-size: 25px;
-    width: 50%;
-    border-radius: 3px;
-    align-self: center;
-    margin-right: 10px;
-    margin-top: 10px;
-}
-
-.MortgageCalculatorPage button:last-child {
-    margin-right: 0;
-}
-
-.MortgageCalculatorPage button:hover {
-    background-color: #e1e1e1;
-}
-
-.MortgageCalculatorPage .summary-section {
-    margin-top: 15px;
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.MortgageCalculatorPage .summary-section h3 {
-    font-size: 50px;  /* Corrected from 50x to 50px */
-    font-weight: bold;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.MortgageCalculatorPage .summary-section div {
-    font-size: 30px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.MortgageCalculatorPage input[type="number"]::-webkit-inner-spin-button,
-.MortgageCalculatorPage input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Subtle shadow for depth */
+  }
+  
+  .mortgage-calculator label {
+    width: 100%; /* Ensures label takes full width */
+    text-align: left; /* Aligns the text of the label to the left */
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .mortgage-calculator input[type="number"],
+  .mortgage-calculator select {
+    width: 100%;
+    padding: 0.75rem; /* Increased padding for better touch area */
+    margin-bottom: 1rem;
+    background: #34495e; /* Slightly lighter than page background for contrast */
+    color: white; /* Light color for the text inside inputs */
+    border: 1px solid #18bc9c; /* Accent color for the border */
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .mortgage-calculator input[type="number"]::placeholder,
+  .mortgage-calculator select::placeholder {
+    color: #95a5a6; /* Lighter placeholder text for better readability */
+  }
+  
+  .mortgage-calculator button {
+    padding: 0.75rem 1.5rem; /* Increased padding for a larger button */
+    background-color: #18bc9c; /* Accent color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .mortgage-calculator button:hover {
+    background-color: #16a085; /* A darker shade of the button color for hover */
+  }
+  
+  .mortgage-calculator h3 {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+  }
+  
+  /* Adjustments for the pie chart container if necessary */
+  .pie-chart-container {
+    margin-top: 2rem;
+  }
+  
+  /* Colors for the pie chart data */
+  .pie-chart-container .data-principal {
+    background-color: rgba(255, 99, 132, 0.2);
+    border-color: rgba(255, 99, 132, 1);
+  }
+  
+  .pie-chart-container .data-interest {
+    background-color: rgba(54, 162, 235, 0.2);
+    border-color: rgba(54, 162, 235, 1);
+  }
+  
+  .pie-chart-container .data-taxes {
+    background-color: rgba(255, 206, 86, 0.2);
+    border-color: rgba(255, 206, 86, 1);
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .page-scroller {
+      padding: 1rem;
+    }
+  
+    .mortgage-calculator {
+      padding: 1rem;
+    }
+  
+    /* If you have a navbar that changes size on mobile, adjust the top margin here */
+    .page-scroller {
+      margin-top: 20vh; /* Adjust this value as necessary */
+    }
+  }
