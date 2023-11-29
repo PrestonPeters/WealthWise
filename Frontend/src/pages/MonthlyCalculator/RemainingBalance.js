@@ -16,7 +16,7 @@ function RemainingBalance({isWindowOpen ,windowClose}){
         /**
          * Variable to store the input income
          */
-        const [inputIncome, setIncome]= useState(0);
+        const [inputIncome, setIncome]= useState('');
         
 
         /**

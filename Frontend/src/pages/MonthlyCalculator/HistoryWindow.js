@@ -55,7 +55,7 @@ function HistoryWindow({isWindowOpen , windowClose}){
                                 <tr>
                                     <td>{spendingElement.category_name}</td>
                                     <td>{spendingElement.expense_name}</td>
-                                    <td>{spendingElement.expense_amount}</td>
+                                    <td>${spendingElement.expense_amount}</td>
                                     <td>{spendingElement.date}</td>
                                     <td>{spendingElement.time}</td>  
                                 </tr>

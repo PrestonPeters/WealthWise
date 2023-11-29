@@ -205,7 +205,7 @@ function createCategoryTable() {
       if (error) {
         console.log(error);
       } else {
-        /** 
+         /** 
         db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Monthly Grocery',610]);
         db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Rent',600]);
         db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Gym',696]);
@@ -243,7 +243,7 @@ app.post('/addcategories', (request, response) => {
  */
 app.post('/addcategories/delete', (request, response) => {
     const category  = request.body.category_name;
-    db.query(`DELETE FROM categoryTable WHERE category_name='${category}'`, (error, results) =>{
+    db.query(`DELETE FROM categoryTable WHERE category_name=?`,[category], (error, results) =>{
         if (error) {
             console.log(error);
         }
@@ -251,7 +251,7 @@ app.post('/addcategories/delete', (request, response) => {
             console.log('successfully deleted category from the table')
         }
     });
-    db.query(`DELETE FROM spendingTable WHERE category_name='${category}'`, (error, results) =>{
+    db.query(`DELETE FROM spendingTable WHERE category_name=?`,[category], (error, results) =>{
         if (error) {
             console.log(error);
         }
@@ -346,7 +346,7 @@ function createIncomeTable() {
       } 
       else{
         console.log("incomeTable created successfully");
-         /** 
+        /** 
         db.query(
           "INSERT INTO incomeTable (income_amount) VALUES (0.0)",
           (error, results) => {
@@ -426,7 +426,7 @@ function createSpendingTable() {
         /** 
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '10/28/2023', '5:02:00 PM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',45, '10/29/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Window Repair',150, '10/30/2023', '6:02:59 PM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Books',200, '10/30/2023', '11:02:59 PM']);
@@ -439,7 +439,7 @@ function createSpendingTable() {
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',80, '11/5/2023', '9:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Fever',40, '11/5/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'Home repair',300, '11/6/2023', '1:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/7/2023', '11:02:59 AM']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '11/7/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',75, '11/8/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',94, '11/9/2023', '11:02:59 AM']);
         db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',60, '11/10/2023', '11:02:59 AM']);

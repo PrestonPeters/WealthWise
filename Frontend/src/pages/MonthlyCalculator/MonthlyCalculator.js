@@ -156,7 +156,8 @@ function MonthlyCalculator(){
         return (
             <div className='monthlyCalculatorPage'>
                 <Container style={{ alignItems:'center'}}>
-                    <p className="expenseTitle"> Manage Your Spendings </p>          
+                    <p className="expenseTitle"> Manage Your Spendings </p>
+                    <p> Add Your Income Through Remaining Balance Button</p>          
                     <Stack direction='horizontal' gap={3}>
                         <Button className='upperButtons' onClick={openCategoryWindow}> Manage Categories</Button>
                         <CategoryWindow isWindowOpen={isCategoryWindowOpen} windowClose={closeCategoryWindow}/>
