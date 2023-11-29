@@ -45,6 +45,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
             })
 
             .then((data)=>{
+                console.log(data);
                 setXAxisDate(data.map((element)=>(element.date)));
                 setYAxisAmount(data.map((element)=>(element.total_spending)));
             });
@@ -94,10 +95,11 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
                         <Modal.Header style={{fontWeight:'bold'}}> Compare Your Spendings Through Bar Graph </Modal.Header>
                         <Modal.Body style={{maxWidth:'800px',maxHeight:'550px', overflowX:'auto'}}> 
                             <h2>Your Spending Graph</h2>
+                            {xAxisDate.length > 0 && yAxisAmount.length > 0 && 
                             <BarChart
                                 xAxis={[{scaleType:'band',data:xAxisDate,label:'Date' }]}
                                 series={[{data:yAxisAmount, label:'Total Spending'}]}
-                                height={500}/>     
+                                height={500}/>}
                         </Modal.Body>
                         <ModalFooter>
                             <Button onClick={windowClose}>Close</Button>
@@ -107,6 +109,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
                         <Modal.Header style={{fontWeight:'bold'}}> Compare Your Spendings Through Using Pie Chart </Modal.Header>
                         <Modal.Body style={{maxWidth:'800px',maxHeight:'550px', overflowX:'auto'}}>
                             <h2>Your Spending Chart</h2>
+                            {chartData.length > 0 && 
                             <PieChart
                                 height={500}
                                 series={[{
@@ -118,7 +121,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
                                     endAngle: 180,
                                     cornerRadius:5,
                                     arcLabel: (category) => `${category.name}`
-                                }]} />                       
+                                }]} />}
                         </Modal.Body>
                         <ModalFooter>
                             <Button onClick={windowClose}>Close</Button>

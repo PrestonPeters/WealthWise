@@ -250,7 +250,6 @@ app.post('/addcategories/delete', (request, response) => {
 app.post('/getcategories', (request, response) => {
   const username = request.body.username;
   console.log("Getting categories");
-  console.log(username);
   db.query(`SELECT category_name,category_total FROM categoryTable WHERE username='${username}'`, (error, results) => {
       if (error) {
           console.log(error);
