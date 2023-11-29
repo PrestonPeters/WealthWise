@@ -15,7 +15,7 @@ import RemainingBalance from './RemainingBalance';
 /**
  * The following function creates visual componenets of the web page.
  */
-function MonthlyCalculator(){
+function MonthlyCalculator({username}){
         /**
          * Variables to determine state of the componenets.
          */
@@ -177,7 +177,8 @@ function MonthlyCalculator(){
                         {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
                     </div>
                 </Container>
-           </div>         
-    )
+                {username === '' && <div className="LoginMessageContainer"><div className="LoginMessage">Please Login or Register to use this feature!</div></div>}
+            </div>         
+        )
 }
 export default MonthlyCalculator;

@@ -34,5 +34,30 @@
     
 }
 
+.LoginMessageContainer {
+    width: 100vw;
+    height: 300px;
+    position: fixed;
+    top: 35vh;
+    left: 0vw;
+}
 
+.LoginMessage {
+    margin-left: 10%;
+    margin-right: 10%;
+    padding-top: 125px;
+    padding-bottom: 125px;
+    font-size: 45px;
+    position: fixed;
+    min-height: 300px;
+    height: 300px;
+    min-width: 600px;
+    width: 80%;
+    font-weight: bold;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 10px;
+    color: black;
+    border: 1px solid #000000;
+}
 

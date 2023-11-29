@@ -45,7 +45,7 @@ function App() {
             <Route path="/debt" element={<Debt/>} />
             <Route path="/luxury" element={<Luxury/>} />
             <Route path="/vacation" element={< Vacation/>} />
-            <Route path="/tracker" element={< MonthlyCalculator/>} />
+            <Route path="/tracker" element={< MonthlyCalculator username={user}/>} />
             
             
             {/*<Route path="/" element={< />} /> */}
