@@ -219,7 +219,7 @@ app.post('/addcategories', (request, response) => {
 app.post('/addcategories/delete', (request, response) => {
     const category  = request.body.category_name;
     const username = request.body.username;
-    db.query(`DELETE FROM categoryTable WHERE category_name='${category} AND username='${username}'`, (error, results) =>{
+    db.query(`DELETE FROM categoryTable WHERE category_name='${category}' AND username='${username}'`, (error, results) =>{
         if (error) {
             console.log(error);
         }
@@ -227,7 +227,7 @@ app.post('/addcategories/delete', (request, response) => {
             console.log('successfully deleted category from the table')
         }
     });
-    db.query(`DELETE FROM spendingTable WHERE category_name='${category} AND username='${username}'`, (error, results) =>{
+    db.query(`DELETE FROM spendingTable WHERE category_name='${category}' AND username='${username}'`, (error, results) =>{
         if (error) {
             console.log(error);
         }

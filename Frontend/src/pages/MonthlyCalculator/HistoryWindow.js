@@ -13,7 +13,7 @@ import { Button, Modal, ModalFooter, Table} from "react-bootstrap";
  * @param param1 - windowClose is a callback function which closes the history window.
  * @returns - It retuen the history table of user's spendings.
  */
-function HistoryWindow({isWindowOpen , windowClose, username, refresh}){
+function HistoryWindow({isWindowOpen , windowClose, username}){
         /**
          * Varible to store all spending history retrived from the database.
          */
@@ -44,7 +44,7 @@ function HistoryWindow({isWindowOpen , windowClose, username, refresh}){
             .then((data)=>{
                 setSpendingList(data);
             });
-        },[]);
+        },[username]);
 
         /**
          * The following code comtains react boostrap componenets which creates visual contents of the history window. 

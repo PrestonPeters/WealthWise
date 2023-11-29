@@ -48,7 +48,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
                 setXAxisDate(data.map((element)=>(element.date)));
                 setYAxisAmount(data.map((element)=>(element.total_spending)));
             });
-        }, [isWindowOpen]);
+        }, [isWindowOpen, username]);
 
         
         /**
@@ -75,9 +75,10 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
             })
 
             .then((data)=> {
-                setChartData(data.map((element)=>({name:element.category_name, value:element.expense_amount})));
+                console.log(data);
+                setChartData(data.map((element)=>({name:element.expense_name, value:element.expense_amount})));
             });
-        },[isWindowOpen]);
+        },[isWindowOpen, username]);
 
 
         useEffect(()=>{console.log(chartData);},[chartData]);
@@ -116,7 +117,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
                                     startAngle: -180,
                                     endAngle: 180,
                                     cornerRadius:5,
-                                    arcLabel: (category) => `${category.value}`
+                                    arcLabel: (category) => `${category.name}`
                                 }]} />                       
                         </Modal.Body>
                         <ModalFooter>

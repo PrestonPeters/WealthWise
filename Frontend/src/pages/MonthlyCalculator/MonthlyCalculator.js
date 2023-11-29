@@ -56,7 +56,7 @@ function MonthlyCalculator({username}){
 
                 .then((data)=>{setCategoryList(data);})
                 .catch((error)=>{console.log(error);});
-        }, [fetchAgain]);
+        }, [fetchAgain, username]);
 
         /**
          * The following function retrives the value of remaining balance from the database everytime webpage is loaded.
@@ -93,7 +93,7 @@ function MonthlyCalculator({username}){
                 .catch((error)=>{console.log(error);
             });
         
-        }, [fetchAgain]);
+        }, [fetchAgain, username]);
 
         /**
          *  The following function opens the category window where user can add or delete category.

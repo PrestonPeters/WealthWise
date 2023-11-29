@@ -10,8 +10,9 @@ import Debt from './pages/Debt_cal/debt';
 import Luxury from './pages/luxury_spending/luxury';
 import Vacation from './pages/Vacation_Spending/vacation';
 import MonthlyCalculator from './pages/MonthlyCalculator/MonthlyCalculator';
-import React, { useEffect, useState, useNavigate } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CalculatorButton from "./pages/Calculator/CalculatorButton";
 
 function App() {
@@ -26,7 +27,6 @@ function App() {
   const onLogout = () => {
     setIsLoggedIn(false);
     setUsername('');
-    useNavigate('/');
   }
 
   return (
