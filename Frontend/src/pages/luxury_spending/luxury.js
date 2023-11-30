@@ -82,7 +82,7 @@ function Luxury() {
 
   return (
     <section className="LuxuryContainer">
-      <div className="container-fluid">
+      <div className="container FormContainer">
         <h1 className="mt-5">Luxury Spending Calculator</h1>
 
         {/* Input for Item Price */}
@@ -140,38 +140,43 @@ function Luxury() {
             <option value="comfortable">Comfortable</option>
             <option value="asap">As Soon As Possible</option>
           </select>
-          <label>
-          Province:
-          <select value={province} onChange={(e) => setProvince(e.target.value)}>
+        </div>
+        
+        {/* Dropdown for Province */}
+        <div className="form-group">
+          <label htmlFor="province">Province:</label>
+          <select onChange={(e) => setProvince(e.target.value)}
+            className="form-control"
+            id="province"
+            value={province}>
             {Object.keys(PROVINCES_TAX_RATES).map((p) => (
               <option key={p} value={p}>
                 {p.replace(/([A-Z])/g, ' $1').trim()}
               </option>
             ))}
           </select>
-        </label>
         </div>
-
-        {/* Display calculated values if total spending is greater than 0 */}
-        {totalSpending > 0 && (
-          <div>
-            <p>
-              Total Spending (including tax): ${totalSpending.toFixed(2)}
-            </p>
-            <p>
-              Monthly Savings for {selectedTP}{" "}
-              {selectedTP === 1 ? "Month" : "Months"}: ${monthlySavings}
-            </p>
-            <p>
-              Monthly Savings (With Affordability Plan): ${affordabilityPlanSavings}
-            </p>
-            <p>
-              Time Until Purchase (With Affordability Plan):{" "}
-              {monthsToSave} {monthsToSave === 1 ? "month" : "months"}
-            </p>
-          </div>
-        )}
       </div>
+
+      {/* Display calculated values if total spending is greater than 0 */}
+      {totalSpending > 0 && (
+        <div>
+          <p>
+            Total Spending (including tax): ${totalSpending.toFixed(2)}
+          </p>
+          <p>
+            Monthly Savings for {selectedTP}{" "}
+            {selectedTP === 1 ? "Month" : "Months"}: ${monthlySavings}
+          </p>
+          <p>
+            Monthly Savings (With Affordability Plan): ${affordabilityPlanSavings}
+          </p>
+          <p>
+            Time Until Purchase (With Affordability Plan):{" "}
+            {monthsToSave} {monthsToSave === 1 ? "month" : "months"}
+          </p>
+        </div>
+      )}
 
       {/* Button to trigger the calculation */}
       <button className="btn btn-primary" onClick={calculateTotalSpending}>

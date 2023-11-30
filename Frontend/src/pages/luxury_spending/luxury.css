@@ -1,4 +1,9 @@
 .LuxuryContainer {
     margin-top: 17vh;
     flex: 1;
+    width: 100%;
+}
+
+.LuxuryContainer .FormContainer {
+    width: min(500px, 100%);
 }
