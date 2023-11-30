@@ -68,17 +68,6 @@ function CategoryBlocks({categoryName,total_spending, username}){
                 })
                 .then((response)=>{
                     console.log(response);
-                    /*
-                    1. by expense_name, find the corresponding total_spending
-                        - if expense_name not exist in `                    
-                        <div className='cardsPanel'>
-                            {categoryList.map((categoryElement)=>(<categoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} /> ))}
-                        </div>`
-                        set total_spending to 0
-                    
-                    2. add the expense_amount to total_spending
-                    3. updating the corresponding total_spending to the new amount on web page
-                    */
                     setDescription('');
                     setSpending('');
                     closeSpendingWindow();
