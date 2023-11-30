@@ -24,7 +24,8 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
 
         /**
          * The following useEffect function retrieves the spending history from the database by considering date as 
-         *  an aspect to categorize the history and selects the last 7 entries to show on the graph. Following function gets executed everytime webpage is loaded.
+         *  an aspect to categorize the history and selects the last 7 entries to show on the graph. The date first appear in the graph on the left
+         *  will be the most recent date, you added spending.Following function gets executed everytime webpage is loaded.
          * It saves the dates in the variable 'xAxisDate' and saves the total spending amount for that date in the varible 'yAxisAmount'.
          */
 
@@ -59,7 +60,7 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
          */
 
         useEffect(()=>{
-            fetch('http://localhost:4000/getspendings', {
+            fetch('http://localhost:4000/getcategories', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
