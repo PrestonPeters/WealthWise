@@ -12,7 +12,7 @@ import { useState } from "react";
  * @param param1 - windowClose is a callback function which closes the manage category window.
  * @returns It returns the visual contents of the manage category  window which contains Form.
  */
-function CategoryWindow({isWindowOpen ,windowClose}){
+function CategoryWindow({isWindowOpen ,windowClose, username}){
         /**
          * Variables to store the data
          */
@@ -34,26 +34,29 @@ function CategoryWindow({isWindowOpen ,windowClose}){
          * The following function add the new category to the database, as well as clears the input fields from 
          * the manage category window and closes it.
          */
-        const addThisCategory=()=>{
+        const addThisCategory=async ()=>{
             if(inputCategoryName.length===0){
                 alert('Category Title is Required');
                 return;
             }
-            fetch('http://localhost:4000/addcategories', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({category_name:inputCategoryName}),
-            })
-            .then((response)=>{
-                console.log(response);
-            })
-            .catch((error)=>{
+            try {
+                await fetch('http://localhost:4000/addcategories', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({category_name:inputCategoryName, username:username}),
+                })
+                .then((response)=>{
+                    console.log(response);
+                    setCategoryName('');
+                    windowClose(); 
+                });
+            }
+
+            catch (error) {
                 console.log(error);
-            })
-            setCategoryName('');
-            windowClose(); 
+            }
         }
 
 
@@ -62,26 +65,30 @@ function CategoryWindow({isWindowOpen ,windowClose}){
          * the manage category window and closes it. Above functions removes all entries of spendings from the database
          * which belongs to given category.
          */
-        const removeThisCategory=()=>{
+        const removeThisCategory = async () => {
             if(deleteCategoryName.length===0){
                 alert('Category Title is Required');
                 return;
             }
-            fetch('http://localhost:4000/addcategories/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({category_name:deleteCategoryName}),
-            })
-            .then((response)=>{
-                console.log(response);
-            })
-            .catch((error)=>{
+            try {
+                await fetch('http://localhost:4000/addcategories/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({category_name:deleteCategoryName, username:username}),
+                })
+
+                .then((response)=>{
+                    console.log("Successfully removed category!");
+                    setdeleteCategoryName('');
+                    windowClose();
+                });
+
+            } catch (error) {
+                console.log("Found an error!");
                 console.log(error);
-            })
-            setdeleteCategoryName('');
-            windowClose(); 
+            }
         }
 
 

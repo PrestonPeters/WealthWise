@@ -12,13 +12,12 @@ import { Button, Form, Modal, Stack, ModalFooter } from "react-bootstrap";
  * @param param1 - windowClose is a callback function which closes the remaining balance window.
  * @returns It returns the visual contents of the remaining balance window which contains Form.
  */
-function RemainingBalance({isWindowOpen ,windowClose}){
+function RemainingBalance({isWindowOpen ,windowClose, username}){
         /**
          * Variable to store the input income
          */
-        const [inputIncome, setIncome]= useState('');
+        const [inputIncome, setIncome]= useState(0);
         
-
         /**
          * The following clears the input box and closes the remaining balance window
          */
@@ -33,26 +32,29 @@ function RemainingBalance({isWindowOpen ,windowClose}){
          * value of reamaining balance. After successfull completion of above tasks, function clears the input box and 
          * closes the remaining balance window.
          */
-        const saveIncome =()=>{
+        const saveIncome =async ()=>{
             if(inputIncome.length===0 || inputIncome<=0 || isNaN(inputIncome) ){
                 alert('Please Input Valid amount ');
                 return;
             } 
-            fetch('http://localhost:4000/addincome', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({income_amount: inputIncome}),
-            })
-            .then((response)=>{  
-                console.log(response);
-            })
-            .catch((error)=>{
+            try {
+                await fetch('http://localhost:4000/addincome', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({income_amount: inputIncome, username:username}),
+                })
+                .then((response)=>{  
+                    console.log(response);
+                    setIncome('');
+                    windowClose();
+                })
+            }
+
+            catch (error) {
                 console.log(error);
-            })
-            setIncome('');
-            windowClose();
+            }
         }
 
 

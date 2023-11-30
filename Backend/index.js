@@ -33,14 +33,14 @@ db.connect((err) => {
 });
 
 
-function createDatabase() {
-  db.query("CREATE DATABASE IF NOT EXISTS Tracker", (err, result) => {
+async function createDatabase() {
+  db.query("CREATE DATABASE IF NOT EXISTS Tracker", async (err, result) => {
     if (err) {
       console.error("Error creating database: ", err);
       return;
     }
     console.log("Database 'Tracker' created or verified successfully");
-    db.query("USE Tracker", (err, result) => {
+    db.query("USE Tracker", async (err, result) => {
       if (err) {
         console.error("Error using database: ", err);
         return;
@@ -52,29 +52,9 @@ function createDatabase() {
       createBalanceTable();
       createIncomeTable();
       createSpendingTable();
-  
     });
   });
 }
-
-
-
-function useDatabase() {
-  db.query("USE tracker", (err, result) => {
-    if (err) {
-      console.error("Error using database: ", err);
-      return;
-    }
-    console.log("Using database 'Tracker'");
-    createUserTable();
-    createCategoryTable();
-    createBalanceTable();
-    createIncomeTable();
-    createSpendingTable();
-  });
-}
-
-
 
 // need to add the first and last name and email
 function createUserTable() {
@@ -90,9 +70,6 @@ function createUserTable() {
     );
 }
 
-
-
-
 function createtransactionTable() {
   db.query(
     "CREATE TABLE IF NOT EXISTS transactions (id INT NOT NULL AUTO_INCREMENT,user_id INT NOT NULL,category VARCHAR(255) NOT NULL,amount DECIMAL(10, 2) NOT NULL, transaction_date DATE NOT NULL,FOREIGN KEY (user_id) REFERENCES users(id),PRIMARY KEY (id)) ENGINE=InnoDB;",
@@ -105,9 +82,6 @@ function createtransactionTable() {
     }
   );
 }
-
-
-
 
 app.post('/register', (req, res) => {
   const { username, password, firstName, lastName, email } = req.body;
@@ -200,19 +174,20 @@ app.get('/transactions/:userId', (req, res) => {
  */
 function createCategoryTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS categoryTable (id INT NOT NULL AUTO_INCREMENT,category_name VARCHAR(100) NOT NULL,category_total DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS categoryTable (id INT NOT NULL AUTO_INCREMENT,category_name VARCHAR(100) NOT NULL,category_total DOUBLE(10,2) NOT NULL, PRIMARY KEY (id), username VARCHAR(255) NOT NULL)",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
-         /** 
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Monthly Grocery',610]);
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Rent',600]);
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Gym',696]);
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Medicine',365]);
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['Vehicle',678]);
-        db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",['School',576]); **/
+        /**
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Monthly Grocery',610, 'Test']);
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Rent',600, 'Test']);
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Gym',696, 'Test']);
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Medicine',365, 'Test']);
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['Vehicle',678, 'Test']);
+        db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",['School',576, 'Test']); 
         console.log("categoryTable created successfully");
+        */
       }
     }
   );
@@ -225,12 +200,15 @@ function createCategoryTable() {
  */
 app.post('/addcategories', (request, response) => {
   const category  = request.body.category_name;
-  db.query("INSERT INTO categoryTable (category_name,category_total) VALUES (?,?)",[category,0.0], (error, results) =>{
+  const username = request.body.username;
+  db.query("INSERT INTO categoryTable (category_name,category_total,username) VALUES (?,?,?)",[category,0.0, username], (error, results) =>{
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else{
           console.log('successfully added category into the table')
+          response.status(200).json([]);
       }
     });
 });
@@ -243,20 +221,23 @@ app.post('/addcategories', (request, response) => {
  */
 app.post('/addcategories/delete', (request, response) => {
     const category  = request.body.category_name;
-    db.query(`DELETE FROM categoryTable WHERE category_name=?`,[category], (error, results) =>{
+    const username = request.body.username;
+    db.query(`DELETE FROM categoryTable WHERE category_name='${category}' AND username='${username}'`, (error, results) =>{
         if (error) {
             console.log(error);
         }
         else{
-            console.log('successfully deleted category from the table')
+            console.log('successfully deleted category from the table');
         }
     });
-    db.query(`DELETE FROM spendingTable WHERE category_name=?`,[category], (error, results) =>{
+    db.query(`DELETE FROM spendingTable WHERE category_name='${category}' AND username='${username}'`, (error, results) =>{
         if (error) {
             console.log(error);
+            response.status(500).json([]);
         }
         else{
-            console.log('successfully deleted category from the table')
+            console.log('successfully deleted category from the table');
+            response.status(200).json(results);
         }
     });     
 });
@@ -264,15 +245,18 @@ app.post('/addcategories/delete', (request, response) => {
 
 
 /**
- * GET method to retrieve all categories from categoryTable along with their category_total 
+ * POST method to retrieve all categories from categoryTable along with their category_total 
  */
-app.get('/addcategories', (request, response) => {
-  db.query("SELECT category_name,category_total FROM categoryTable", (error, results) => {
+app.post('/getcategories', (request, response) => {
+  const username = request.body.username;
+  console.log("Getting categories");
+  db.query(`SELECT category_name,category_total FROM categoryTable WHERE username='${username}'`, (error, results) => {
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else{
-        response.json(results);
+        response.status(200).json(results);
         console.log('Retrieved all categories successfully');
       }
   });
@@ -288,15 +272,15 @@ app.get('/addcategories', (request, response) => {
  */
 function createBalanceTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS balanceTable (id INT NOT NULL AUTO_INCREMENT,balance_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id), username VARCHAR(255) NOT NULL)",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
         console.log("balanceTable created successfully");
-        /** 
+        /**
         db.query(
-          "INSERT INTO balanceTable (balance_amount) VALUES (0.0)",
+          "INSERT INTO balanceTable (balance_amount,username) VALUES (0.0, 'Test')",
           (error, results) => {
             if (error) {
               console.log(error);
@@ -305,7 +289,8 @@ function createBalanceTable() {
               console.log("Balance 0 added successfully");
             }
           }
-        );**/
+        );
+        */
       }
     }
   );
@@ -314,16 +299,25 @@ function createBalanceTable() {
 
 
 /**
- * GET method to retrive current/updated remaining balance (balance_amount) from the table
+ * POST method to retrive current/updated remaining balance (balance_amount) from the table
  */
-app.get('/addbalance', (request, response) => {
-  db.query("SELECT balance_amount FROM balanceTable" , (error, results) => {
+app.post('/getbalance', (request, response) => {
+  console.log("Getting balance...");
+  const username = request.body.username;
+  db.query(`SELECT balance_amount FROM balanceTable WHERE username='${username}'` , (error, results) => {
       if (error){
           console.log(error);
       }
       else{
-        response.json(results[0].balance_amount);
-        console.log("Balance retrieved successfully");
+        if (results[0]) {
+          response.status(200).json(results[0].balance_amount);
+          console.log("Balance retrieved successfully");
+        }
+
+        else {
+          response.status(200).json(0);
+          console.log("Balance retrieved successfully");
+        }
       }
   });
 });
@@ -337,18 +331,18 @@ app.get('/addbalance', (request, response) => {
  * of adding new amount to the incomeTable. The query to add initial amount to the table has commentted out to save further 
  * addition of 0 to the incomeTable.
  */
-function createIncomeTable() {
+async function createIncomeTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS incomeTable (id INT NOT NULL AUTO_INCREMENT,income_amount DOUBLE(10,2) NOT NULL, PRIMARY KEY (id), username VARCHAR(255) NOT NULL)",
     (error, results) => {
       if (error) {
         console.log(error);
       } 
       else{
         console.log("incomeTable created successfully");
-        /** 
+        /**
         db.query(
-          "INSERT INTO incomeTable (income_amount) VALUES (0.0)",
+          "INSERT INTO incomeTable (income_amount,username) VALUES (0.0, 'Test')",
           (error, results) => {
             if (error) {
               console.log(error);
@@ -356,7 +350,8 @@ function createIncomeTable() {
               console.log("Income 0 added successfully");
             }
           }
-        );**/
+        );
+        */
       }
     }
   );
@@ -373,37 +368,78 @@ function createIncomeTable() {
  */
 app.post('/addincome', (request, response) => {
    const balance  = request.body.income_amount;
-    db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}'`, (error, results) =>{
-      if (error) {
+   const username = request.body.username;
+
+  db.query("SELECT * FROM incomeTable WHERE username = ?", [username], async (err, results) => {
+      if (err) {console.log(err);}
+      else if (results.length === 0) await addIncome(username);
+      db.query(`UPDATE balanceTable SET balance_amount=balance_amount+'${balance}' WHERE username='${username}'`, (error, results) =>{
+        if (error) {
           console.log(error);
+          response.status(500).json([]);
         }
         else {
           console.log("Balance updated successfully into the table");
+          db.query(`UPDATE incomeTable SET income_amount='${balance}' WHERE username='${username}'`, (error, results) =>{
+            if (error) {
+              console.log(error);
+              response.status(500).json([]);
+            }
+            else {
+              console.log("Income updated successfully into the table");
+              response.status(200).json([]);
+            }
+        });
         }
+      });
     });
-    db.query(`UPDATE incomeTable SET income_amount='${balance}'`, (error, results) =>{
-        if (error) {
-          console.log(error);
-        }
-        else{
-          console.log("Income updated successfully into the table");
-        }
+  });
+
+async function addIncome(username) {
+  return new Promise((resolve, reject) => {
+    db.query(`INSERT INTO incomeTable (income_amount,username) VALUES (0.0, '${username}')`,
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        reject();
+      } else console.log("Income 0 added successfully");
     });
-});
 
-
+    db.query(`INSERT INTO balanceTable (balance_amount,username) VALUES (0.0, '${username}')`,
+    (error, results) => {
+      if (error) {
+        console.log(error);
+        reject();
+      } else {
+        console.log("Balance 0 added successfully");
+        resolve();
+      }
+    });
+  }
+  );
+}
 
 /**
- * GET method to retrieve income_amount from the incomeTable
+ * POST method to retrieve income_amount from the incomeTable
  */
-app.get('/addincome', (request, response) => {
-  db.query("SELECT income_amount FROM incomeTable" , (error, results) => {
+app.post('/getincome', (request, response) => {
+  console.log("Getting income...")
+  const username = request.body.username;
+  db.query(`SELECT income_amount FROM incomeTable WHERE username='${username}'` , (error, results) => {
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else {
-        response.json(results[0].income_amount);
-        console.log("Balance retrieved successfully");
+        if (results[0]) {
+          console.log("Income retrieved successfully");
+          response.status(200).json(results[0].income_amount);
+        }
+
+        else {
+          console.log("Income retrieved successfully");
+          response.status(200).json(0);
+        }
       }
   });
 });
@@ -418,52 +454,53 @@ app.get('/addincome', (request, response) => {
  */
 function createSpendingTable() {
   db.query(
-    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, category_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount DOUBLE(10,2) NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id))",
+    "CREATE TABLE IF NOT EXISTS spendingTable (id INT NOT NULL AUTO_INCREMENT, category_name VARCHAR(100) NOT NULL, expense_name VARCHAR(500) NOT NULL, expense_amount DOUBLE(10,2) NOT NULL, date VARCHAR(20) NOT NULL, time VARCHAR(20) NOT NULL, PRIMARY KEY (id), username VARCHAR(255) NOT NULL)",
     (error, results) => {
       if (error) {
         console.log(error);
       } else {
-        /** 
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '10/28/2023', '5:02:00 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',45, '10/29/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Window Repair',150, '10/30/2023', '6:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Books',200, '10/30/2023', '11:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',100, '10/31/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Pens',15, '11/1/2023', '9:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Notebooks',100, '11/1/2023', '9:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Cloths',45, '11/2/2023', '5:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Shoes',150, '11/2/2023', '5:03:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMakert',80, '11/3/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',80, '11/5/2023', '9:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Fever',40, '11/5/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Rent', 'Home repair',300, '11/6/2023', '1:02:59 PM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '11/7/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',75, '11/8/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',94, '11/9/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',60, '11/10/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Instruments',371, '11/11/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Cisco',46, '11/12/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Fresh Market',35, '11/13/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Parents medicine',160, '11/14/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Shoes',45, '11/15/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'gas',75, '11/16/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'gas',40, '11/17/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'Member ship',100, '11/18/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',40, '11/19/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Cold',15, '11/20/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Bag',76, '11/21/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'Gas',73, '11/22/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'Safety kit',95, '11/23/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',62, '11/24/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Drugstore',10, '11/24/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Vehicle', 'AC repair',100, '11/25/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Gym', 'cloths',30, '11/25/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '11/26/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['Medicine', 'Pharmacy',20, '11/26/2023', '11:02:59 AM']);
-        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",['School', 'CardSheet Papers',45, '11/26/2023', '11:02:59 AM']);
-        **/
+         
+        /**
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/27/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Rent', 'November',300, '10/27/2023', '2:02:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Walmart',10, '11/28/2023', '5:02:00 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Drugstore',45, '10/29/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'Window Repair',150, '10/30/2023', '6:02:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Books',200, '10/30/2023', '11:02:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'Gas',100, '10/31/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Pens',15, '11/1/2023', '9:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Notebooks',100, '11/1/2023', '9:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Gym', 'Cloths',45, '11/2/2023', '5:02:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Gym', 'Shoes',150, '11/2/2023', '5:03:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMakert',80, '11/3/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'Gas',80, '11/5/2023', '9:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Fever',40, '11/5/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Rent', 'Home repair',300, '11/6/2023', '1:02:59 PM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',100, '10/7/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Drugstore',75, '11/8/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',94, '11/9/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'AC repair',60, '11/10/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Gym', 'Instruments',371, '11/11/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Cisco',46, '11/12/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Fresh Market',35, '11/13/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Parents medicine',160, '11/14/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Shoes',45, '11/15/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'gas',75, '11/16/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'gas',40, '11/17/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Gym', 'Member ship',100, '11/18/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',40, '11/19/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Cold',15, '11/20/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Bag',76, '11/21/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'Gas',73, '11/22/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'Safety kit',95, '11/23/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'SuperMarket',62, '11/24/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Drugstore',10, '11/24/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Vehicle', 'AC repair',100, '11/25/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Gym', 'cloths',30, '11/25/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Monthly Grocery', 'Supermarket',43, '11/26/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['Medicine', 'Pharmacy',20, '11/26/2023', '11:02:59 AM', 'Test']);
+        db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",['School', 'CardSheet Papers',45, '11/26/2023', '11:02:59 AM', 'Test']);
+        */
         console.log("spendingTable created successfully");
       }
     }
@@ -478,29 +515,33 @@ function createSpendingTable() {
  * as updates the balance_amount from balanceTable.
  */
 app.post('/addspendings', (request, response) => {
-    const {category_name, expense_name, expense_amount, date, time}  = request.body;
-    db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time ) VALUES (?,?,?,?,?)",[category_name, expense_name, expense_amount,date, time], (error, results) =>{
+    const {category_name, expense_name, expense_amount, date, time, username}  = request.body;
+    db.query("INSERT INTO spendingTable (category_name, expense_name, expense_amount, date, time, username ) VALUES (?,?,?,?,?,?)",[category_name, expense_name, expense_amount,date, time, username], (error, results) =>{
         if (error) {
           console.log(error);
+          response.status(500).json([]);
         }
         else{
-          console.log('spending added succesfully into the table')
-        }
-    });
-    db.query(`UPDATE categoryTable SET category_total=category_total+'${expense_amount}' WHERE category_name='${category_name}'` , (error, results) =>{
-        if (error) {
-            console.log(error);
-        }
-        else{
-            console.log('successfully added category into the table')
-        }
-    });
-    db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}'`, (error, results) =>{
-        if (error) {
-            console.log(error);
-        }
-        else{
-            console.log("Balance updated successfully into the table");
+          console.log('spending added succesfully into the table');
+          db.query(`UPDATE categoryTable SET category_total=category_total+'${expense_amount}' WHERE category_name='${category_name}' AND username='${username}'` , (error, results) =>{
+            if (error) {
+                console.log(error);
+                response.status(500).json([]);
+            }
+            else{
+                console.log('successfully added category into the table')
+                db.query(`UPDATE balanceTable SET balance_amount=balance_amount-'${expense_amount}' WHERE username='${username}'`, (error, results) =>{
+                  if (error) {
+                      console.log(error);
+                      response.status(500).json([]);
+                  }
+                  else{
+                      console.log("Balance updated successfully into the table");
+                      response.status(200).json([]);
+                  }
+              });
+            }
+        });
         }
     });
 });
@@ -508,17 +549,25 @@ app.post('/addspendings', (request, response) => {
 
 
 /**
- * GET method to retrieve all entries from the spendingTable categorized by the date.
+ * POST method to retrieve all entries from the spendingTable categorized by the date.
  */
-app.get('/addspendings/date', (request, response) => {
-  db.query("SELECT date, SUM(expense_amount) AS total_spending FROM spendingTable GROUP BY date ORDER BY STR_TO_DATE(date,'%m/%d/%Y') DESC LIMIT 7", (error, results) => {
+app.post('/getspendings/date', (request, response) => {
+  const username = request.body.username;
+  db.query(`SELECT date, SUM(expense_amount) AS total_spending FROM spendingTable WHERE username='${username}' GROUP BY date ORDER BY STR_TO_DATE(date,'%m/%d/%Y') DESC LIMIT 7`, (error, results) => {
       if (error) {
           console.log(error);
+          response.status(500).json([]);
       }
       else{
-        response.json(results);
-        console.log('All spendings with given date are retrived successfully');
-        console.log(response);
+        if (results[0]) {
+          console.log('All spendings with given date are retrived successfully');
+          response.status(200).json(results);
+        }
+
+        else {
+          console.log('All spendings with given date are retrived successfully');
+          response.status(200).json([]);
+        }
       }
   });
 });
@@ -527,16 +576,26 @@ app.get('/addspendings/date', (request, response) => {
 
 
 /**
- *  GET method to retrieve all entries from the spendingTable in the same order they have been added to the spendingTable
+ *  POST method to retrieve all entries from the spendingTable in the same order they have been added to the spendingTable
  */
-app.get('/addspendings', (request, response) => {
-  db.query("SELECT * FROM spendingTable ORDER BY id ASC",(error, results) => {
+app.post('/getspendings', (request, response) => {
+  const username = request.body.username;
+  db.query(`SELECT * FROM spendingTable WHERE username='${username}' ORDER BY id ASC`,(error, results) => {
       if (error) {
           console.log(error);
+          response.status(500).send('Error retrieving transactions');
       }
       else{
-        response.json(results);
-        console.log('All spendings are retrived successfully');
+        if (results[0]) {
+          response.status(200).json(results);
+          console.log('All spendings are retrived successfully');
+        }
+
+        else {
+          response.status(200).json([]);
+          console.log('All spendings are retrived successfully');
+        
+        }
       }
   });
 });
