@@ -1,0 +1,70 @@
+
+/* General styles */
+body {
+    
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    height: auto;
+    font-family: Montserrat;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    max-width: 1200px;
+}
+
+/* Hero section styles */
+.hero {
+    background-color: #031930;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.hero p {
+    font-size: 1.2em;
+    color: #ffffff;
+}
+
+/* About Us section styles */
+.about-us {
+    padding: 40px 0;
+    background-color: #042548;
+    text-align: center;
+}
+
+.about-us h2 {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.about-us p {
+    color: #d4d4d4;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .hero, .about-us {
+        padding: 20px 0;
+    }
+
+    .container {
+        width: 95%;
+    }
+}
