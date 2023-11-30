@@ -10,6 +10,7 @@
     min-width: 800px;
     max-width: 100vw;
     overflow: auto;
+    
 }
 
 .budget-label{
@@ -45,12 +46,13 @@
     margin-left: 0px;
 }
 .print{
-    border: 3px outset #eee;
+    background: #34495e;
+    color: white;
+    border: 1px solid #18bc9c;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     margin-top: 10px;
     border-radius: 5px;
     text-align: center;
-    background:white;
-    color: rgb(7, 6, 6);
     font-style: normal;
     width: 50vh;
     align-self: center;
@@ -58,7 +60,7 @@
 }
 
 .box{
-    border: 3px outset #eee;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     border-radius: 30px;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -70,12 +72,18 @@
     text-align: left;
     width: auto;
     border-radius: 5px;
-    border-color:white;
-    border:none;
+    background: #34495e;
+    color: white;
+    border: 1px solid #18bc9c;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     cursor: pointer;
     height: 30px;
     font-size: large;
     
+}
+
+.Vacation input::placeholder{
+    color: white;
 }
 
 
@@ -83,7 +91,7 @@
     margin-left: 0px;
 }
 #expense-name{
-    margin-right: 12.7vh;
+    margin-right: 11.5vh;
     
 }
 
@@ -172,10 +180,10 @@
     margin: 10px auto;
     text-align: center;
     width: 50vh;
-    border: 2px solid #bbb;
-    border-radius: 10px;
-    background: white;
-    color: rgb(50, 49, 49);
+    background: #34495e;
+    color: white;
+    border: 1px solid #18bc9c;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     
 }
 
