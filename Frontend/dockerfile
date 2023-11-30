@@ -9,6 +9,8 @@ COPY package*.json ./
 
 # Install the application dependencies
 RUN npm install
+RUN npm add @mui/material @emotion/react @emotion/styled
+RUN npm add @mui/x-charts
 
 # Copy the rest of the application code to the container
 COPY . .
