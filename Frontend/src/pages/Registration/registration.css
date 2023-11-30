@@ -1,7 +1,24 @@
 .Registration{
     position: 0;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    padding: 20px;
 }
 .username{
     background-color: rgb(255, 255, 255);
     position: center;
+}
+.Registration input{
+    border-radius: 5px;
+    background: #34495e;
+    color: white;
+    border: 1px solid #18bc9c;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+.Registration button{
+    background-color: #18bc9c;
+    border-radius: 2px;
+    border : none;
+    cursor: pointer;
+    margin-left: 10px;
 }
