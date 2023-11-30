@@ -35,10 +35,6 @@ function MonthlyCalculator({username}){
 
 
         /**
-         *  Following functions retrieve all the categories from the database to create category blocks for each category,
-         *  everytime the webpage is loaded. 
-         */
-        /**
          * The following function retrives the value of remaining balance from the database everytime webpage is loaded.
          */
     
@@ -62,7 +58,11 @@ function MonthlyCalculator({username}){
                 .then((data)=>{setRemainingBalance(data);})
                 .catch((error)=>{console.log(error);});
             }, [fetchAgain, username]);
+        
 
+        /**
+         * The following function retrives the value of last income from the database everytime webpage is loaded.
+         */
         useEffect(()=>{
             console.log("Fetching income...");
             fetch('http://localhost:4000/getincome', {
@@ -80,7 +80,13 @@ function MonthlyCalculator({username}){
                 .then((data)=>{setLastIncome(data);})
                 .catch((error)=>{console.log(error);});
             }, [fetchAgain, username]);
+        
 
+        
+        /**
+         *  Following functions retrieve all the categories from the database to create category blocks for each category,
+         *  everytime the webpage is loaded. 
+         */
         useEffect(()=>{
             console.log("Fetching categories...");
             fetch('http://localhost:4000/getcategories', {
