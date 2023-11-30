@@ -178,6 +178,8 @@ function MonthlyCalculator({username}){
             setBalanceWindowOpen(false);
         }
 
+        const toggleFetch = () => {setFetchAgain(!fetchAgain);}
+
         /**
          * The following code contains react boostrap componenets to create visual contents of the webpage. It uses condition statement 
          * to update the background colour of remaining balance button, while other buttons have default background colour. The conditional
@@ -207,7 +209,7 @@ function MonthlyCalculator({username}){
                     </Stack>
                     <p> Add Your Spendings According To Categories</p><br></br>
                     <div className='cardsPanel'>
-                        {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} username={username}/> ))}
+                        {categoryList.map((categoryElement)=>(<CategoryBlocks categoryName={categoryElement.category_name} total_spending={categoryElement.category_total} username={username} toggleFetch={toggleFetch}/> ))}
                     </div>
                 </Container>
             </div>         

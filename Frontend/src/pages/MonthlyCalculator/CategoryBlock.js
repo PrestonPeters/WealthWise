@@ -12,7 +12,7 @@ import { Button, Card, ModalFooter, Stack ,Form,Modal} from "react-bootstrap";
  * allowed to add new categories.
  * @returns It returns the visual contents of category templates.
  */
-function CategoryBlocks({categoryName,total_spending, username}){
+function CategoryBlocks({categoryName,total_spending, username, toggleFetch}){
         /**
          * variable to store state of the spending window
          */
@@ -40,6 +40,7 @@ function CategoryBlocks({categoryName,total_spending, username}){
          * The following function clears the input boxes from the spending window and closes it.
          */
         const closeSpendingWindow=()=>{
+            toggleFetch();
             setDescription('');
             setSpending('');
             setSpendingWindowOpen(false);
@@ -67,9 +68,6 @@ function CategoryBlocks({categoryName,total_spending, username}){
                     body: JSON.stringify({category_name:category,expense_name:inputDescription,expense_amount:inputSpending, date:new Date().toLocaleDateString(), time:new Date().toLocaleTimeString(), username:username}),
                 })
                 .then((response)=>{
-                    console.log(response);
-                    setDescription('');
-                    setSpending('');
                     closeSpendingWindow();
                 });
             } 
