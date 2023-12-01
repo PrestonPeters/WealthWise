@@ -88,3 +88,30 @@
     justify-content: center;
     align-items: center;
 }
+
+.CarPaymentCalculatorPage .input-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+}
+
+.CarPaymentCalculatorPage .dollar-sign {
+    position: absolute;
+    margin-left: 10px; 
+    font-size: calc(10px + 1vmin);
+    color: #000; 
+}
+
+.CarPaymentCalculatorPage .large-input {
+    padding-left: 20px; 
+    width: 225px; 
+}
+
+.CarPaymentCalculatorPage .larger-input {
+    padding-left: 20px;
+    width: 250px;
+}
+
+.CarPaymentCalculatorPage .normal-input {
+    padding-left: 20px;
+}
