@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Pie } from 'react-chartjs-2';
 import './mortgage.css';
 
@@ -121,7 +121,7 @@ function MortgageCalculator() {
   };
 
   // function for running regression test
-  const runRegressionTests = () => {
+  const runRegressionTests = useCallback(() => {
     const testCases = [
       {
         id: '1',
@@ -178,11 +178,11 @@ function MortgageCalculator() {
         console.log(`Test Case ${testCase.id} Passed.`);
       }
     });
-  };
+  }, []);
 
   useEffect(() => {
     runRegressionTests();
-  }, []);
+  }, [runRegressionTests]);
 
 
   return (
