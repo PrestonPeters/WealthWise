@@ -78,7 +78,8 @@ function GraphWindow({ isWindowOpen, windowClose, username }) {
 
             .then((data)=> {
                 console.log(data);
-                setChartData(data.map((element)=>({name:element.expense_name, value:element.expense_amount})));
+                let filtered = data.filter((element)=>{return element.category_total !== 0});
+                setChartData(filtered.map((element)=>({name:element.category_name, value:element.category_total})));
             });
         },[isWindowOpen, username]);
 

@@ -25,6 +25,7 @@ function HistoryWindow({isWindowOpen , windowClose, username}){
          */
 
         useEffect(()=>{
+            console.log("Fetching history...");
             fetch('http://localhost:4000/getspendings', {
                 method: 'POST',
                 headers: {
@@ -42,9 +43,10 @@ function HistoryWindow({isWindowOpen , windowClose, username}){
             })
 
             .then((data)=>{
+                console.log(data);
                 setSpendingList(data);
             });
-        },[username]);
+        },[username, isWindowOpen]);
 
         /**
          * The following code comtains react boostrap componenets which creates visual contents of the history window. 
