@@ -31,7 +31,7 @@ function Home() {
                         <list>
                             Waleed Ahmad, 
                             Anmol Dhunna, 
-                            Karan Kairon,
+                            Birkaran Kairon,
                             Aman Mansuri, 
                             Preston Peters,
                             Prajakta Sanjay Sutar, 
