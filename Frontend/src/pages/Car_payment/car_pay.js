@@ -36,6 +36,11 @@ function Car(){
   // calculate button logic
   const calculatePayment = () => {
 
+    // Convert empty strings to 0 for optional fields
+    const downPaymentZero = downPayment !== "" ? parseFloat(downPayment) : 0;
+    const currentVehicleValueZero = currentVehicleValue !== "" ? parseFloat(currentVehicleValue) : 0;
+    const registrationFeesZero = registrationFees !== "" ? parseFloat(registrationFees) : 0;
+
     // Check for vehicle price
     if (!vehiclePrice || vehiclePrice === 0) {
       alert("You forgot to enter the New Vehicle Price!");
@@ -53,26 +58,39 @@ function Car(){
       return;
     }
     // Check for current vehicle value
-    else if (currentVehicleValue === null || isNaN(currentVehicleValue) || currentVehicleValue === "") {
-      alert("Please enter an amount (or 0) for the Current Vehicle Value.");
-      return;
-    }
+    // else if (currentVehicleValue === null || isNaN(currentVehicleValue) || currentVehicleValue === "") {
+    //   alert("Please enter an amount (or 0) for the Current Vehicle Value.");
+    //   return;
+    // }
     // Check for down payment
-    else if (downPayment === null || isNaN(downPayment) || downPayment === "") {
-      alert("Please enter an amount (or 0) for the Down Payment.");
-      return;
-    }
-    // Check for registration & other fees
-    else if (registrationFees === null || isNaN(registrationFees) || registrationFees === "") {
-      alert("Please enter an amount (or 0) for Registration & Other Fees.");
-      return;
-    }
+    // else if (downPayment === null || isNaN(downPayment) || downPayment === "") {
+    //   alert("Please enter an amount (or 0) for the Down Payment.");
+    //   return;
+    // }
+    // // Check for registration & other fees
+    // else if (registrationFees === null || isNaN(registrationFees) || registrationFees === "") {
+    //   alert("Please enter an amount (or 0) for Registration & Other Fees.");
+    //   return;
+    // }
 
     // Check if current vehicle value is greater than the new vehicle price
-    if (currentVehicleValue > vehiclePrice) {
+    if (currentVehicleValueZero > vehiclePrice) {
       alert("Current Vehicle Value should be less than New Vehicle Price!");
       return;
     }
+
+    // Check if down payment value is greater than the new vehicle price
+    if (downPaymentZero > vehiclePrice) {
+      alert("Down Payment Value should be less than New Vehicle Price!");
+      return;
+    }
+
+    // Check if sum of current vehicle value and down payment value is greater than new vehicle price
+    if ((currentVehicleValueZero + downPaymentZero) > vehiclePrice) {
+      alert("Sum of Current Vehicle Value and Down Payment Value should be less than New Vehicle Price!");
+      return;
+    }
+
 
     // 1. Adjust the vehiclePrice for provincial tax
     let adjustedVehiclePrice = vehiclePrice;
@@ -91,7 +109,7 @@ function Car(){
     }
 
     // 2. Deduct down payment and current vehicle value, and 3. Add registration and other fees
-    const principal = parseFloat(adjustedVehiclePrice) + parseFloat(registrationFees) - parseFloat(downPayment) - parseFloat(currentVehicleValue);
+    const principal = parseFloat(adjustedVehiclePrice) + parseFloat(registrationFeesZero) - parseFloat(downPaymentZero) - parseFloat(currentVehicleValueZero);
 
     // Convert loan duration to months if it's in years
     const totalMonths = (durationType === 'years') ? loanDuration * 12 : loanDuration;
@@ -266,10 +284,6 @@ function Car(){
     });
   }, []);
 
-  useEffect(() => {
-    runRegressionTests();
-  }, [runRegressionTests]);
-
   // reset inputs when reset button is pressed 
   const resetInputs = () => {
     setPaymentFrequency('monthly');
@@ -342,25 +356,35 @@ function Car(){
       <div className="CarPaymentCalculatorPage">
         <br></br>
         <br></br>
+        <h2>Welcome to the Car Payment Calculator!</h2>
         <br></br>
         <div>
           <label>
             New Vehicle Price: &nbsp;
-            <input type="number" min = "0" value={vehiclePrice} onChange={e => setVehiclePrice(parseFloat(e.target.value))} onKeyDown={preventInvalidChars} placeholder="Enter New Vehicle Price" />
+            <div className="input-wrapper">
+              <span className="dollar-sign">$</span>
+              <input type="number" min = "0" value={vehiclePrice} onChange={e => setVehiclePrice(parseFloat(e.target.value))} onKeyDown={preventInvalidChars} placeholder="Enter New Vehicle Price" className="large-input"/>
+            </div>
           </label>
         </div>
         <br></br>
         <div>
           <label>
             Current Vehicle Value (Optional): &nbsp;
-            <input type="number" min = "0" value={currentVehicleValue} onChange={e => setCurrentVehicleValue(parseFloat(e.target.value))} onKeyDown=       {preventInvalidChars} placeholder="Enter Current Vehicle Price" />
+            <div className="input-wrapper">
+              <span className="dollar-sign">$</span>
+              <input type="number" min = "0" value={currentVehicleValue} onChange={e => setCurrentVehicleValue(e.target.value !== "" ? parseFloat(e.target.value) : "")} onKeyDown=       {preventInvalidChars} placeholder="Enter Current Vehicle Price" className="larger-input"/>
+            </div>
           </label>
         </div>
         <br></br>
         <div>
           <label>
             Down Payment (Optional): &nbsp;
-            <input type="number" min = "0" value={downPayment} onChange={e => setDownPayment(parseFloat(e.target.value))} onKeyDown={preventInvalidChars} placeholder="Enter Down Payment" />
+            <div className="input-wrapper">
+              <span className="dollar-sign">$</span>
+              <input type="number" min = "0" value={downPayment} onChange={e => setDownPayment(e.target.value !== "" ? parseFloat(e.target.value) : "")} onKeyDown={preventInvalidChars} placeholder="Enter Down Payment" className="normal-input"/>
+            </div>
           </label>
         </div>
         <br></br>
@@ -404,7 +428,10 @@ function Car(){
         <div>
           <label>
             Registration & Other Fees (Optional): &nbsp;
-            <input type="number" min = "0" value={registrationFees} onChange={e => setRegistrationFees(parseFloat(e.target.value))} onKeyDown={preventInvalidChars} placeholder="Enter Other Fees" />
+            <div className="input-wrapper">
+              <span className="dollar-sign">$</span>
+              <input type="number" min = "0" value={registrationFees} onChange={e => setRegistrationFees(e.target.value !== "" ? parseFloat(e.target.value) : "")} onKeyDown={preventInvalidChars} placeholder="Enter Other Fees" className="normal-input"/>
+            </div>
           </label>
         </div>
         <br></br>
