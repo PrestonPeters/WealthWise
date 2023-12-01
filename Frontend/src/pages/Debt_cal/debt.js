@@ -650,6 +650,7 @@ function Debt() {
                 console.log("Number Validation Test " + testNumber + " Failed!");
                 setMasterTestFlag(m => m + 1);
             }
+
             if (testNumber !== testNumbers.length - 1) setTestNumber(t => t + 1);
             else setNumberTested(t => true);
         }
@@ -697,7 +698,8 @@ function Debt() {
                 console.log("Interest Validation Test " + interestNum + " Failed!");
                 setMasterTestFlag(m => m + 1);
             }
-            if (interestNum !== testInterest.length) setInterestNum(interestNum + 1);
+
+            if (interestNum !== testInterest.length - 1) setInterestNum(interestNum + 1);
             else setInterestTested(t => true);
         }
         // Fix for the useEffect hook running twice on the first render - function is irrelevant to render during tests
