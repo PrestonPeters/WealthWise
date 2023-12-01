@@ -258,7 +258,11 @@ function Debt() {
                 }
             }
 
-            else setMonthlyPayment("You cannot afford to pay off your debt with your current surplus income.");
+            else {
+                setMonthlyPayment("You cannot afford to pay off your debt with your current surplus income.");
+                scrollToBottom("DebtCalc1Output");
+            }
+
         }
     }, [textReady, reqPayment, affordablePayment, monthsToPay, debtFreeBy, targetDate, firstTestState]);
 
@@ -801,7 +805,7 @@ function Debt() {
 
             const scrollTarget = targetElement
                 ? (targetElement.offsetTop + targetElement.scrollHeight - window.innerHeight + 25)
-                : (document.documentElement.scrollHeight - window.innerHeight - 60);
+                : (document.documentElement.scrollHeight - window.innerHeight - 200);
 
             // If the time hasn't elapsed, then the window is scrolled by a small increment to
             // make the scroll less jarring.
