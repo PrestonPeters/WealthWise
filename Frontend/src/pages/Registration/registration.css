@@ -1,4 +1,15 @@
 .Registration{
+    padding: 2.5%;
+    margin-top: 17vh;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    height: auto;
+   
+    font-family: Montserrat;
     position: 0;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
     padding: 20px;
