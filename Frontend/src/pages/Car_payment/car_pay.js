@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Pie } from 'react-chartjs-2';
-import Chart from 'chart.js/auto'; 
+//import Chart from 'chart.js/auto'; 
 import './car_pay.css';
 
 // beginning of car payment calculator code
@@ -170,7 +170,7 @@ function Car(){
   };
 
   // regression testing 
-  const runRegressionTests = () => {
+  const runRegressionTests = useCallback(() => {
     const testCases = [
       {
         id: '1',
@@ -264,7 +264,11 @@ function Car(){
         console.log(`${testCase.id} - Test Passed`);
       }
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    runRegressionTests();
+  }, [runRegressionTests]);
 
   // reset inputs when reset button is pressed 
   const resetInputs = () => {
@@ -295,7 +299,7 @@ function Car(){
   // Call the testing function when the component mounts
   useEffect(() => {
     runRegressionTests();
-  }, []);
+  }, [runRegressionTests]);
 
   // resest inputs after testing the function just to make sure
   useEffect(() => {
