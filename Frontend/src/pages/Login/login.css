@@ -1,12 +1,27 @@
 .login-container{
     position: 0;
     color: #ffffff;
-
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+    padding: 30px;
+    border: none;
+    border-radius: 5px;
 
 }
 
 .submit{
-    background-color: #e74c3c;
+    background-color: #18bc9c;
+    margin-top: 10px;
     color: #ffffff;
     background-attachment: fixed;
+    border: none;
+    border-radius: 3px;
 }
+
+.login-container input{
+    border-radius: 5px;
+    background: #34495e;
+    color: white;
+    border: 1px solid #18bc9c;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
