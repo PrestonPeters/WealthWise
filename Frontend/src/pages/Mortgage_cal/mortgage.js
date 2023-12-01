@@ -55,15 +55,18 @@ function MortgageCalculator() {
   });
 
   const handleHomePriceChange = (e) => {
-    setHomePrice(Math.max(0, Number(e.target.value)));
+    const value = e.target.value;
+    setHomePrice(value === '' ? '' : Math.max(0, Number(value)));
   };
-
+  
   const handleDownPaymentChange = (e) => {
-    setDownPayment(Math.max(0, Number(e.target.value)));
+    const value = e.target.value;
+    setDownPayment(value === '' ? '' : Math.max(0, Number(value)));
   };
 
   const handleInterestRateChange = (e) => {
-    setInterestRate(Math.max(0, Number(e.target.value)));
+    const value = e.target.value;
+    setInterestRate(value === '' ? '' : Math.max(0, Number(value)));
   };
 
   const calculateMortgage = () => {
