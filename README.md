@@ -15,11 +15,11 @@ Before you begin, please ensure you have Docker desktop installed on your machin
 
 1) Clone the repository
     First, clone the Git repository to your local machine using the following command:
-        git clone https://git.cs.usask.ca/asd028/cmpt-370-t2.git
+        git clone https://github.com/PrestonPeters/WealthWise.git
 
 2) Navigate to the Project Directory
     Change to the project directory in your terminal:
-        cd ./cmpt-370-t2
+        cd ./WealthWise
 
 3) Start Docker
     Use Docker Compose to build and start the project:
