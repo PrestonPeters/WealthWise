@@ -1,5 +1,10 @@
-## CMPT 370 T2
-Welcome to the CMPT 370 T2 project! This guide will help you get started with setting up the project environment using Docker.
+## CMPT 370 Final Project
+This is the final project for my CMPT 370 (Intro to Software Engineering) class at the University of Saskatchewan that I worked on with 6 of my classmates.
+All of the collaborators on the project are listed in the commits except for Prajakta Sanjay who performed most of the frontend design for the Spending
+Tracker feature of the website. 
+
+My personal contribution was primarily client/server interaction, quality control, troubleshooting, and also the Debt Repayment calculator feature. I spent
+a lot of time assisting with the database queries and server operation for the Spending Tracker feature as well.
 
 ## Prerequisites
 Before you begin, please ensure you have Docker desktop installed on your machine. If you don't have Docker yet, you can download it from Docker Desktop.
