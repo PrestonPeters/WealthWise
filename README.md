@@ -1,4 +1,4 @@
-## CMPT 370 Final Project
+## Introduction
 This is the final project for my CMPT 370 (Intro to Software Engineering) class at the University of Saskatchewan that I worked on with 6 of my classmates.
 All of the collaborators on the project are listed in the commits except for Prajakta Sanjay who performed most of the frontend design for the Spending
 Tracker feature of the website. 
@@ -11,7 +11,7 @@ Before you begin, please ensure you have Docker desktop installed on your machin
     https://www.docker.com/products/docker-desktop/
 
 
-## Getting started
+## Running Instructions
 
 1) Clone the repository
     First, clone the Git repository to your local machine using the following command:
@@ -29,8 +29,6 @@ Before you begin, please ensure you have Docker desktop installed on your machin
     Once Docker has finished setting up, you can access the application by navigating to:
         http://localhost:3000
 
-## Closing the Application
-
-When you're done, you can shut down the Docker environment. To do this, use the following command:
+5) When you're done, you can shut down the Docker environment. To do this, use the following command:
     CTRL C
     docker-compose down -v
